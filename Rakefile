@@ -37,6 +37,7 @@ RSpec::Core::RakeTask.new(:rcov) do |spec|
 end
 
 task :default => :spec
+task :test => :spec # for rubygems-test
 
 require 'yard'
 YARD::Rake::YardocTask.new
