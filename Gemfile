@@ -12,5 +12,7 @@ group :development do
   gem "jeweler", "~> 1.6.4"
   # gem "rcov", ">= 0"
   gem "simplecov", "~> 0.5.3"
-  gem "ZenTest", "~> 4.6.2"
+  gem "autotest"
+
+  gem 'rdiscount'
 end
