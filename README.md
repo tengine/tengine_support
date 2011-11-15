@@ -14,7 +14,7 @@ It doesn't depend on other tengine gems.
 * Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
 
 ## License
-tengine_event is distributed under the LGPL and MPL
+tengine_support is distributed under the LGPL and MPL
 
 ## Copyright
 
