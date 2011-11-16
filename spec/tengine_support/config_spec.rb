@@ -88,7 +88,7 @@ describe "config" do
 
       describe App1::LoggerConfig.output do
         it { subject.should be_a(Tengine::Support::Config::Definition::Field)}
-        # its(:type){ should == :string }
+        its(:type){ should == :string }
         its(:name){ should == :output }
         its(:description){ should be_a(Proc)}
         its(:default){ should be_a(Proc)}

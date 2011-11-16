@@ -1,29 +1,37 @@
 require 'tengine/support/config'
 
+require 'active_support/core_ext/class/attribute'
+
 module Tengine::Support::Config::Definition
   class << self
     def included(klass)
       klass.extend(ClassMethods)
+      klass.class_eval do
+        self.class_attribute :definition_fields, :instance_reader => false, :instance_writer => false
+        self.definition_fields = {}
+      end
     end
   end
 
   module ClassMethods
-    def fields
-      @fields ||= {}
-    end
 
     def field(name, *args)
       attrs = args.last.is_a?(Hash) ? args.pop : {}
-      if field = fields[name]
+      attrs[:description] = args.first unless args.empty?
+      attrs[:name] = name
+      if superclass.is_a?(Tengine::Support::Config::Definition) &&
+          (self.definition_fields == self.superclass.definition_fields)
+        self.definition_fields = self.superclass.definition_fields.dup
+      end
+      if field = definition_fields[name]
+        field = field.dup
         field.update(attrs)
       else
-        attrs[:description] = args.first
-        attrs[:name] = name
         field = Field.new(attrs)
-        fields[name] = field
-        (class << self; self; end).module_eval do
-          define_method(field.name){ field }
-        end
+      end
+      self.definition_fields[name] = field
+      (class << self; self; end).module_eval do
+        define_method(field.name){ field }
       end
     end
 
