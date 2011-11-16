@@ -4,8 +4,11 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 module App1
   class DbConfig
     include Tengine::Support::Config::Definition
-    field :host, 'hostname to connect db.', :default => 'localhost', :type => :string
-    field :port, "port to connect db.", :default => 27017, :type => :integer
+    field :host    , 'hostname to connect db.', :default => 'localhost', :type => :string
+    field :port    , "port to connect db.", :default => 27017, :type => :integer
+    field :username, 'username to connect db.', :type => :string
+    field :password, 'password to connect db.', :type => :string
+    field :database, 'database name to connect db.', :type => :string
   end
 
   class ProcessConfig
@@ -127,7 +130,7 @@ describe "config" do
           field(:action, "test|load|start|enable|stop|force-stop|status|activate", :type => :string)
           field(:config, "path/to/config_file", :type => :string)
           add(:process, App1::ProcessConfig)
-          add(:db, App1::DbConfig)
+          add(:db, App1::DbConfig, :defaults => {:database => "tengine_production"})
           group(:event_queue) do
             add(:connection, App1::AmqpConnection)
             add(:exchange  , App1::AmqpExchange, :defaults => {:name => 'tengine_event_exchange'})
@@ -233,6 +236,9 @@ describe "config" do
           :db => {
             :host => 'localhost',
             :port => 27017,
+            :username => nil,
+            :password => nil,
+            :database => 'tengine_production'
           },
           :event_queue => {
             :connection => {
