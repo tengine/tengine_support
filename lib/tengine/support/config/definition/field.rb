@@ -18,4 +18,13 @@ class Tengine::Support::Config::Definition::Field
       @description
     end
   end
+
+  def default_value
+    default.respond_to?(:call) ? default.call : default
+  end
+
+  def skelton
+    default_value
+  end
+
 end

@@ -131,7 +131,15 @@ describe "config" do
           add(:log_common, App1::LoggerConfigCommon)
           add(:application_log, App1::LoggerConfig,
             :logger_name => "application",
-            :process_config => :process, :log_common => :log_common)
+            :dependencies => {
+              :process_config => :process,
+              :log_common => :log_common,
+            },
+            :defaults => {
+              :rotation      => 3          ,
+              :rotation_size => 1024 * 1024,
+              :level         => 'info'     ,
+            })
           add(:process_stdout_log, App1::LoggerConfig,
             :logger_name => "#{File.basename($PROGRAM_NAME)}_stdout",
             :process_config => :process, :log_common => :log_common)
@@ -154,6 +162,66 @@ describe "config" do
 
       it "suite returns child by name" do
         subject.child_by_name(:event_queue).should be_a(Tengine::Support::Config::Definition::Group)
+      end
+
+      it "suite returns child by name" do
+        subject.child_by_name(:log_common).should be_a(App1::LoggerConfigCommon)
+      end
+
+      it "skelton" do
+        subject.skelton.should == {
+          :process => {
+            :daemon => nil,
+            :pid_dir => nil,
+          },
+          :db => {
+            :host => 'localhost',
+            :port => 27017,
+          },
+          :event_queue => {
+            :connection => {
+              :host => 'localhost',
+              :port => 5672,
+            },
+            :exchange => {
+              :name => 'tengine_event_exchange',
+              :type => 'direct',
+              :durable => true,
+            },
+            :queue => {
+              :name => 'tengine_event_queue',
+              :durable => true,
+            },
+          },
+
+          :log_common => {
+            :output        => nil        ,
+            :rotation      => 3          ,
+            :rotation_size => 1024 * 1024,
+            :level         => 'info'     ,
+          }.freeze,
+
+          :application_log => {
+            :output        => nil,
+            :rotation      => nil,
+            :rotation_size => nil,
+            :level         => nil,
+          }.freeze,
+
+          :process_stdout_log => {
+            :output        => nil,
+            :rotation      => nil,
+            :rotation_size => nil,
+            :level         => nil,
+          }.freeze,
+
+          :process_stderr_log => {
+            :output        => nil,
+            :rotation      => nil,
+            :rotation_size => nil,
+            :level         => nil,
+          }.freeze,
+        }
       end
     end
 

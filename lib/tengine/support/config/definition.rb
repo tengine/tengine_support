@@ -12,8 +12,8 @@ module Tengine::Support::Config::Definition
     def included(klass)
       klass.extend(ClassMethods)
       klass.class_eval do
-        self.class_attribute :definition_fields, :instance_reader => false, :instance_writer => false
-        self.definition_fields = {}
+        self.class_attribute :children, :instance_writer => false
+        self.children = {}
       end
     end
   end
@@ -24,16 +24,16 @@ module Tengine::Support::Config::Definition
       attrs[:description] = args.first unless args.empty?
       attrs[:name] = name
       if superclass.is_a?(Tengine::Support::Config::Definition) &&
-          (self.definition_fields == self.superclass.definition_fields)
-        self.definition_fields = self.superclass.definition_fields.dup
+          (self.children == self.superclass.children)
+        self.children = self.superclass.children.dup
       end
-      if field = definition_fields[name]
+      if field = children[name]
         field = field.dup
         field.update(attrs)
       else
         field = Field.new(attrs)
       end
-      self.definition_fields[name] = field
+      self.children[name] = field
       (class << self; self; end).module_eval do
         define_method(field.name){ field }
       end
@@ -47,4 +47,12 @@ module Tengine::Support::Config::Definition
   end
 
   attr_accessor :name
+
+  def skelton
+    children.inject({}) do |dest, (name, child)|
+      dest[name] = child.skelton
+      dest
+    end
+  end
+
 end

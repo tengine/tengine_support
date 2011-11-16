@@ -25,4 +25,13 @@ module Tengine::Support::Config::Definition::HasManyChildren
     result
   end
 
+  def skelton
+    children.inject({}) do |dest, child|
+      dest[child.name] = child.skelton
+      dest
+    end
+  end
+
+
+
 end
