@@ -3,6 +3,11 @@ require 'tengine/support/config'
 require 'active_support/core_ext/class/attribute'
 
 module Tengine::Support::Config::Definition
+  autoload :Field, 'tengine/support/config/definition/field'
+  autoload :Group, 'tengine/support/config/definition/group'
+  autoload :Suite, 'tengine/support/config/definition/suite'
+  autoload :HasManyChildren, 'tengine/support/config/definition/has_many_children'
+
   class << self
     def included(klass)
       klass.extend(ClassMethods)
@@ -14,7 +19,6 @@ module Tengine::Support::Config::Definition
   end
 
   module ClassMethods
-
     def field(name, *args)
       attrs = args.last.is_a?(Hash) ? args.pop : {}
       attrs[:description] = args.first unless args.empty?
@@ -42,25 +46,5 @@ module Tengine::Support::Config::Definition
     end
   end
 
-  class Field
-    attr_accessor :name, :type, :default_description, :default
-    attr_writer :description
-    def initialize(attrs = {})
-      attrs.each{|k, v| send("#{k}=", v)}
-    end
-
-    def update(attrs)
-      attrs.each{|k, v| send("#{k}=", v)}
-    end
-
-    def description
-      if default_description.is_a?(Proc)
-        lambda{ @description + default_description.call }
-      else
-        @description
-      end
-    end
-  end
-
-
+  attr_accessor :name
 end

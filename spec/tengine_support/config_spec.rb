@@ -14,6 +14,28 @@ module App1
     field :pid_dir, "path/to/dir for PID created.", :type => :directory
   end
 
+  class AmqpConnection
+    include Tengine::Support::Config::Definition
+    field :host , 'hostname to connect queue.', :default => 'localhost', :type => :string
+    field :port , "port to connect queue.", :default => 5672, :type => :integer
+    field :vhost, "vhost to connect queue.", :type => :string
+    field :user , "username to connect queue.", :type => :string
+    field :pass , "password to connect queue.", :type => :string
+  end
+
+  class AmqpExchange
+    include Tengine::Support::Config::Definition
+    field :name   , "exchange name.", :type => :string
+    field :type   , "exchange type.", :type => :string, :default => 'direct'
+    field :durable, "exchange durable.", :type => :boolean, :default => true
+  end
+
+  class AmqpQueue
+    include Tengine::Support::Config::Definition
+    field :name   , "queue name.", :type => :string
+    field :durable, "queue durable.", :type => :boolean, :default => true
+  end
+
   class LoggerConfigCommon
     include Tengine::Support::Config::Definition
     field :output, 'file path or "STDOUT" / "STDERR".', :type => :string
@@ -40,6 +62,7 @@ module App1
       :default => lambda{ log_common.level },
       :default_description => lambda{"value of #{log_common.long}-level"}
   end
+
 end
 
 describe "config" do
@@ -93,34 +116,46 @@ describe "config" do
         its(:description){ should be_a(Proc)}
         its(:default){ should be_a(Proc)}
       end
-
     end
 
-#     context "dynamic" do
-#       before do
-#         root = Tengine::Support::Config.define do
-#           group(:basic) do
-#             add(:db, App1::DbConfig)
-#             add(:process, App1::ProcessConfig)
-#             add(:log_common, App1::LoggerConfigCommon)
-#             add(:application_log, App1::LoggerConfig,
-#               :logger_name => "application",
-#               :process_config => :process, :log_common => :log_common)
-#             add(:process_stdout_log, App1::LoggerConfig,
-#               :logger_name => "#{File.basename($PROGRAM_NAME)}_stdout",
-#               :process_config => :process, :log_common => :log_common)
-#             add(:process_stderr_log, App1::LoggerConfig,
-#               :logger_name => "#{File.basename($PROGRAM_NAME)}_stderr",
-#               :process_config => :process, :log_common => :log_common)
-#           end
-#           short_for({
-#               :D => [:basic, :process, :daemon],
-#               :O => [:basic, :db, :host],
-#               :P => [:basic, :db, :port],
-#             })
-#         end
-#       end
-#     end
+    context "dynamic" do
+      subject do
+        @suite = Tengine::Support::Config.suite do
+          add(:process, App1::ProcessConfig)
+          add(:db, App1::DbConfig)
+          group(:event_queue) do
+            add(:connection, App1::AmqpConnection)
+            add(:exchange  , App1::AmqpExchange, :defaults => {:name => 'tengine_event_exchange'})
+            add(:queue     , App1::AmqpQueue   , :defaults => {:name => 'tengine_event_queue'})
+          end
+          add(:log_common, App1::LoggerConfigCommon)
+          add(:application_log, App1::LoggerConfig,
+            :logger_name => "application",
+            :process_config => :process, :log_common => :log_common)
+          add(:process_stdout_log, App1::LoggerConfig,
+            :logger_name => "#{File.basename($PROGRAM_NAME)}_stdout",
+            :process_config => :process, :log_common => :log_common)
+          add(:process_stderr_log, App1::LoggerConfig,
+            :logger_name => "#{File.basename($PROGRAM_NAME)}_stderr",
+            :process_config => :process, :log_common => :log_common)
+          mapping({
+              [:process, :daemon] => :D,
+              [:db, :host] => :O,
+              [:db, :port] => :P,
+            })
+        end
+        @suite
+      end
+
+      it "suite has children" do
+        subject.children.map(&:name).should == [:process, :db, :event_queue, :log_common,
+          :application_log, :process_stdout_log, :process_stderr_log]
+      end
+
+      it "suite returns child by name" do
+        subject.child_by_name(:event_queue).should be_a(Tengine::Support::Config::Definition::Group)
+      end
+    end
 
   end
 
