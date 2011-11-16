@@ -55,6 +55,26 @@ module Tengine::Support::Config::Definition::HasManyChildren
     result
   end
 
+  def field(name, *args)
+    attrs = args.last.is_a?(Hash) ? args.pop : {}
+    attrs[:description] = args.first unless args.empty?
+    attrs[:name] = name
+    attrs[:parent] = self
+    if field = children.detect{|child| child.name == name}
+      new_field = field.dup
+      new_field.update(attrs)
+      idx = self.children.index(field)
+      self.children[idx] = new_field
+      field = new_field
+    else
+      field = Tengine::Support::Config::Definition::Field.new(attrs)
+      self.children << field
+    end
+    (class << self; self; end).module_eval do
+      attr_accessor field.name
+    end
+  end
+
   def skelton
     children.inject({}) do |dest, child|
       dest[child.name] = child.skelton

@@ -124,6 +124,8 @@ describe "config" do
     context "dynamic" do
       subject do
         @suite = Tengine::Support::Config.suite do
+          field(:action, "test|load|start|enable|stop|force-stop|status|activate", :type => :string)
+          field(:config, "path/to/config_file", :type => :string)
           add(:process, App1::ProcessConfig)
           add(:db, App1::DbConfig)
           group(:event_queue) do
@@ -156,7 +158,9 @@ describe "config" do
       end
 
       it "suite has children" do
-        subject.children.map(&:name).should == [:process, :db, :event_queue, :log_common,
+        subject.children.map(&:name).should == [
+          :action, :config,
+          :process, :db, :event_queue, :log_common,
           :application_log, :process_stdout_log, :process_stderr_log]
       end
 
@@ -220,6 +224,8 @@ describe "config" do
 
       it "skelton" do
         subject.skelton.should == {
+          :action => nil,
+          :config => nil,
           :process => {
             :daemon => nil,
             :pid_dir => nil,
