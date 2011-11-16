@@ -5,7 +5,7 @@ module App1
   class DbConfig
     include Tengine::Support::Config::Definition
     field :host, 'hostname to connect db.', :default => 'localhost', :type => :string
-    field :port, "port to connect db.", :default => 5672, :type => :integer
+    field :port, "port to connect db.", :default => 27017, :type => :integer
   end
 
   class ProcessConfig
@@ -50,18 +50,21 @@ module App1
     depends :log_common
 
     field :output,
-      :default => lambda{ process_config.daemon ? "./log/#{logger_name}.log" : "STDOUT" },
+      :default => proc{
+        process_config.daemon ?
+        "./log/#{logger_name}.log" : "STDOUT" },
       :default_description => lambda{"if daemon process then \"./log/#{logger_name}.log\" else \"STDOUT\""}
     field :rotation,
-      :default => lambda{ log_common.rotation },
+      :default => proc{ log_common.rotation },
       :default_description => lambda{"value of #{log_common.long}-rotation"}
     field :rotation_size,
-      :default => lambda{ log_common.rotation_size },
+      :default => proc{ log_common.rotation_size },
       :default_description => lambda{"value of #{log_common.long}-rotation-size"}
     field :level,
-      :default => lambda{ log_common.level },
+      :default => proc{ log_common.level },
       :default_description => lambda{"value of #{log_common.long}-level"}
   end
+
 
 end
 
@@ -82,7 +85,7 @@ describe "config" do
         its(:type){ should == :integer }
         its(:name){ should == :port }
         its(:description){ should == 'port to connect db.'}
-        its(:default){ should == 5672}
+        its(:default){ should == 27017}
       end
 
       describe App1::ProcessConfig.daemon do
@@ -128,24 +131,21 @@ describe "config" do
             add(:exchange  , App1::AmqpExchange, :defaults => {:name => 'tengine_event_exchange'})
             add(:queue     , App1::AmqpQueue   , :defaults => {:name => 'tengine_event_queue'})
           end
-          add(:log_common, App1::LoggerConfigCommon)
-          add(:application_log, App1::LoggerConfig,
-            :logger_name => "application",
-            :dependencies => {
-              :process_config => :process,
-              :log_common => :log_common,
-            },
+          add(:log_common, App1::LoggerConfigCommon,
             :defaults => {
               :rotation      => 3          ,
               :rotation_size => 1024 * 1024,
               :level         => 'info'     ,
             })
+          add(:application_log, App1::LoggerConfig,
+            :logger_name => "application",
+            :dependencies => { :process_config => :process, :log_common => :log_common,})
           add(:process_stdout_log, App1::LoggerConfig,
             :logger_name => "#{File.basename($PROGRAM_NAME)}_stdout",
-            :process_config => :process, :log_common => :log_common)
+            :dependencies => { :process_config => :process, :log_common => :log_common,})
           add(:process_stderr_log, App1::LoggerConfig,
             :logger_name => "#{File.basename($PROGRAM_NAME)}_stderr",
-            :process_config => :process, :log_common => :log_common)
+            :dependencies => { :process_config => :process, :log_common => :log_common,})
           mapping({
               [:process, :daemon] => :D,
               [:db, :host] => :O,
@@ -160,12 +160,62 @@ describe "config" do
           :application_log, :process_stdout_log, :process_stderr_log]
       end
 
-      it "suite returns child by name" do
-        subject.child_by_name(:event_queue).should be_a(Tengine::Support::Config::Definition::Group)
+      context "suite returns child by name" do
+        {
+          :process => App1::ProcessConfig,
+          :db => App1::DbConfig,
+          :event_queue => Tengine::Support::Config::Definition::Group,
+          [:event_queue, :connection] => NilClass,
+          [:event_queue, :exchange  ] => NilClass,
+          [:event_queue, :queue     ] => NilClass,
+          :log_common => App1::LoggerConfigCommon,
+          :application_log => App1::LoggerConfig,
+          :process_stdout_log => App1::LoggerConfig,
+          :process_stderr_log => App1::LoggerConfig,
+        }.each do |name, klass|
+          it{ subject.child_by_name(name).should be_a(klass) }
+        end
+
+        {
+          :process => App1::ProcessConfig,
+          :db => App1::DbConfig,
+          :event_queue => Tengine::Support::Config::Definition::Group,
+          [:event_queue, :connection] => App1::AmqpConnection,
+          [:event_queue, :exchange  ] => App1::AmqpExchange,
+          [:event_queue, :queue     ] => App1::AmqpQueue,
+          :log_common => App1::LoggerConfigCommon,
+          :application_log => App1::LoggerConfig,
+          :process_stdout_log => App1::LoggerConfig,
+          :process_stderr_log => App1::LoggerConfig,
+        }.each do |name_array, klass|
+          it{ subject.find(name_array).should be_a(klass) }
+        end
       end
 
-      it "suite returns child by name" do
-        subject.child_by_name(:log_common).should be_a(App1::LoggerConfigCommon)
+      context "parent and children" do
+        it do
+          log_common = subject.find(:log_common)
+          application_log = subject.find(:application_log)
+          log_common.should_not == application_log
+          log_common.children.each do |log_common_child|
+            application_log_child = application_log.child_by_name(log_common_child.name)
+            application_log_child.should_not be_nil
+            application_log_child.name.should == log_common_child.name
+            application_log_child.object_id.should_not == log_common_child.object_id
+            application_log_child.parent.should == application_log
+            log_common_child.parent.should == log_common
+          end
+        end
+      end
+
+      context "dependencies" do
+        it do
+          application_log = subject.find(:application_log)
+          application_log.process_config.should_not be_nil
+          application_log.process_config.should be_a(App1::ProcessConfig)
+          application_log.log_common.should_not be_nil
+          application_log.log_common.should be_a(App1::LoggerConfigCommon)
+        end
       end
 
       it "skelton" do
@@ -182,6 +232,9 @@ describe "config" do
             :connection => {
               :host => 'localhost',
               :port => 5672,
+              :vhost => nil,
+              :user  => nil,
+              :pass  => nil,
             },
             :exchange => {
               :name => 'tengine_event_exchange',
@@ -202,21 +255,21 @@ describe "config" do
           }.freeze,
 
           :application_log => {
-            :output        => nil,
+            :output        => "STDOUT",
             :rotation      => nil,
             :rotation_size => nil,
             :level         => nil,
           }.freeze,
 
           :process_stdout_log => {
-            :output        => nil,
+            :output        => "STDOUT",
             :rotation      => nil,
             :rotation_size => nil,
             :level         => nil,
           }.freeze,
 
           :process_stderr_log => {
-            :output        => nil,
+            :output        => "STDOUT",
             :rotation      => nil,
             :rotation_size => nil,
             :level         => nil,

@@ -1,7 +1,8 @@
 require 'tengine/support/config/definition'
 
 class Tengine::Support::Config::Definition::Field
-  attr_accessor :name, :type, :default_description, :default
+  attr_accessor :name, :parent
+  attr_accessor :type, :default_description, :default
   attr_writer :description
   def initialize(attrs = {})
     attrs.each{|k, v| send("#{k}=", v)}
@@ -20,7 +21,7 @@ class Tengine::Support::Config::Definition::Field
   end
 
   def default_value
-    default.respond_to?(:call) ? default.call : default
+    default.respond_to?(:to_proc) ? parent.instance_eval(&default) : default
   end
 
   def skelton

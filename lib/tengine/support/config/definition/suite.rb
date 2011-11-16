@@ -6,4 +6,7 @@ class Tengine::Support::Config::Definition::Suite
   def mapping(names_to_short)
   end
 
+  def parent; nil; end
+  def root; self; end
+
 end
