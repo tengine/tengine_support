@@ -47,6 +47,9 @@ class Tengine::Support::Config::Definition::OptparseVisitor
         case d.type
         when :boolean then
           o.on(*args){d.__parent__.send("#{d.__name__}=", true)}
+        when :load_config then
+          long_opt << "=VAL"
+          o.on(*args){|f| d.__parent__.send("#{d.__name__}=", f) }
         else
           long_opt << "=VAL"
           if default_value = d.default_value

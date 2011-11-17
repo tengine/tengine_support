@@ -77,7 +77,7 @@ Usage: config_test [-k action] [-f path_to_config]
          [-H db_host] [-P db_port] [-U db_user] [-S db_pass] [-B db_database]
 
     -k, --action=VAL                 test|load|start|enable|stop|force-stop|status|activate  default: "start"
-        --config=VAL                 path/to/config_file 
+    -f, --config=VAL                 path/to/config_file 
 
 process:
     -D, --process-daemon             process works on background. 

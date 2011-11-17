@@ -64,7 +64,7 @@ module Tengine::Support::Config::Definition::HasManyChildren
         :__name__ => __name__,
         :__parent__ => self,
         :__block__ => block,
-        :__type__ => :field,
+        :__type__ => attrs[:__type__] || :field,
       })
     if field = children.detect{|child| child.__name__ == __name__}
       new_field = field.dup
@@ -109,6 +109,13 @@ module Tengine::Support::Config::Definition::HasManyChildren
   end
 
   def separator?; false; end
+
+  def load_config(name, *args)
+    options = args.last.is_a?(Hash) ? args.pop : {}
+    options[:type] = :load_config
+    args << options
+    field(name, *args)
+  end
 
   def to_hash
     children.inject({}) do |dest, child|

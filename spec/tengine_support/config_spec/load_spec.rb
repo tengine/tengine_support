@@ -61,7 +61,6 @@ describe "config" do
       subject{ @suite }
       it_should_behave_like "load_spec_01.yml's data"
     end
-
   end
 
 end

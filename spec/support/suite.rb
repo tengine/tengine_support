@@ -7,7 +7,7 @@ Usage: config_test [-k action] [-f path_to_config]
 EOS
 
     field(:action, "test|load|start|enable|stop|force-stop|status|activate", :type => :string, :default => "start")
-    field(:config, "path/to/config_file", :type => :string)
+    load_config(:config, "path/to/config_file", :type => :string)
     add(:process, App1::ProcessConfig)
     add(:db, Tengine::Support::Config::Mongoid::Connection, :defaults => {:database => "tengine_production"})
     group(:event_queue) do
@@ -36,6 +36,7 @@ EOS
 
     mapping({
         [:action] => :k,
+        [:config] => :f,
         [:process, :daemon] => :D,
         [:db, :host] => :O,
         [:db, :port] => :P,

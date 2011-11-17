@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'tengine/support/config/definition'
 
 require 'tengine/support/yaml_with_erb'
@@ -25,7 +26,13 @@ class Tengine::Support::Config::Definition::Suite
   def parse!(argv)
     v = Tengine::Support::Config::Definition::OptparseVisitor.new(self)
     self.accept_visitor(v)
-    v.option_parser.parse(argv)
+    if load_config = children.detect{|child| child.type == :load_config}
+      opts = v.option_parser.getopts(argv.dup) # このdup重要。もう一度parseに使用する場合に中身が空にならないように。
+      if filepath = opts[load_config.__name__.to_s]
+        load_file(filepath)
+      end
+    end
+    v.option_parser.parse(argv.dup)
   end
 
   def name_array
