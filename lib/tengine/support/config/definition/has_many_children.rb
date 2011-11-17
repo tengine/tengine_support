@@ -22,7 +22,7 @@ module Tengine::Support::Config::Definition::HasManyChildren
 
   def add(__name__, klass, options = {}, &block)
     result = klass.new
-    result.parent = self
+    result.__parent__ = self
     result.__name__ = __name__
     result.instantiate_children
     dependencies = options[:dependencies] || {}
@@ -49,7 +49,7 @@ module Tengine::Support::Config::Definition::HasManyChildren
 
   def group(__name__, options = {}, &block)
     result = Tengine::Support::Config::Definition::Group.new(__name__, options)
-    result.parent = self
+    result.__parent__ = self
     (class << self; self; end).class_eval{ define_method(__name__){ result } }
     children << result
     result.instance_eval(&block) if block
@@ -60,7 +60,7 @@ module Tengine::Support::Config::Definition::HasManyChildren
     attrs = args.last.is_a?(Hash) ? args.pop : {}
     attrs[:description] = args.first unless args.empty?
     attrs[:__name__] = __name__
-    attrs[:parent] = self
+    attrs[:__parent__] = self
     if field = children.detect{|child| child.__name__ == __name__}
       new_field = field.dup
       new_field.update(attrs)

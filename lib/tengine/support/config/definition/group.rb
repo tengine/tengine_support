@@ -4,7 +4,7 @@ class Tengine::Support::Config::Definition::Group
   include Tengine::Support::Config::Definition::HasManyChildren
 
   attr_reader :__name__
-  attr_accessor :parent
+  attr_accessor :__parent__
 
   def initialize(__name__, options)
     @__name__ = __name__
@@ -12,7 +12,7 @@ class Tengine::Support::Config::Definition::Group
   end
 
   def root
-    parent.root
+    __parent__.root
   end
 
 end

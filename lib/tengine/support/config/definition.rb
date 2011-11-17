@@ -26,7 +26,7 @@ module Tengine::Support::Config::Definition
       attrs = args.last.is_a?(Hash) ? args.pop : {}
       attrs[:description] = args.first unless args.empty?
       attrs[:__name__] = __name__
-      attrs[:parent] = self
+      attrs[:__parent__] = self
 
       if (superclass < Tengine::Support::Config::Definition) &&
           (self.children == self.superclass.children)
@@ -82,12 +82,12 @@ module Tengine::Support::Config::Definition
 
   end
 
-  attr_accessor :__name__, :parent, :children
+  attr_accessor :__name__, :__parent__, :children
 
   def instantiate_children
     @children = self.class.children.map do |class_child|
       child = class_child.dup
-      child.parent = self
+      child.__parent__ = self
       child
     end
   end

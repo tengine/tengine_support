@@ -232,8 +232,8 @@ describe "config" do
             application_log_child.should_not be_nil
             application_log_child.__name__.should == log_common_child.__name__
             application_log_child.object_id.should_not == log_common_child.object_id
-            application_log_child.parent.should == application_log
-            log_common_child.parent.should == log_common
+            application_log_child.__parent__.should == application_log
+            log_common_child.__parent__.should == log_common
           end
         end
       end
