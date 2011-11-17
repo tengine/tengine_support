@@ -149,7 +149,7 @@ process_stderr_log:
         --process-stderr-log-level=VAL
                                      debug/info/warn/error/fatal. value of --log-common-level default: "info"
 
-general:
-        --general-version=VAL        show version 
-        --general-help=VAL           show this help message 
+General:
+        --version                    show version 
+        --help                       show this help message 
 END_OF_HELP

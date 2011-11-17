@@ -86,12 +86,26 @@ module Tengine::Support::Config::Definition::HasManyChildren
     field = Tengine::Support::Config::Definition::Field.new(attrs)
     self.children << field
   end
+  alias_method :__action__, :action
 
   def action?; false; end
 
+  def separator(description)
+    attrs = {
+      :description => description,
+      :__name__ => :"separator#{children.count + 1}",
+      :__parent__ => self,
+      :__separator__ => true,
+    }
+    field = Tengine::Support::Config::Definition::Field.new(attrs)
+    self.children << field
+  end
+
+  def separator?; false; end
+
   def to_hash
     children.inject({}) do |dest, child|
-      unless child.action?
+      unless child.action? || child.separator?
         value = child.to_hash
         unless value.is_a?(Hash) && value.empty?
           dest[child.__name__] = child.to_hash
@@ -120,6 +134,5 @@ module Tengine::Support::Config::Definition::HasManyChildren
   def get_value(obj)
     obj.is_a?(Proc) ? self.instance_eval(&obj) : obj
   end
-
 
 end

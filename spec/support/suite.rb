@@ -30,10 +30,10 @@ EOS
     add(:process_stderr_log, App1::LoggerConfig,
       :logger_name => "#{File.basename($PROGRAM_NAME)}_stderr",
       :dependencies => { :process_config => :process, :log_common => :log_common,})
-    group(:general) do
-      action(:version, "show version"){ STDOUT.puts "1.1.1"; exit }
-      action(:help   , "show this help message"){ STDOUT.puts option_parser.help; exit }
-    end
+    separator("\nGeneral:")
+    __action__(:version, "show version"){ STDOUT.puts "1.1.1"; exit }
+    __action__(:help   , "show this help message"){ STDOUT.puts option_parser.help; exit }
+
     mapping({
         [:action] => :k,
         [:process, :daemon] => :D,

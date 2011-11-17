@@ -1,7 +1,7 @@
 require 'tengine/support/config/definition'
 
 class Tengine::Support::Config::Definition::Field
-  attr_accessor :__name__, :__parent__, :__block__
+  attr_accessor :__name__, :__parent__, :__block__, :__separator__
   attr_accessor :type, :default_description, :default, :description
   def initialize(attrs = {})
     attrs.each{|k, v| send("#{k}=", v)}
@@ -9,6 +9,10 @@ class Tengine::Support::Config::Definition::Field
 
   def action?
     !!__block__
+  end
+
+  def separator?
+    __separator__
   end
 
   def update(attrs)

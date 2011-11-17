@@ -142,5 +142,6 @@ module Tengine::Support::Config::Definition
   end
 
   def action?; false; end
+  def separator?; false; end
 
 end

@@ -37,11 +37,22 @@ class Tengine::Support::Config::Definition::OptparseVisitor
       when :boolean then
         o.on(*args){d.__parent__.send("#{d.__name__}=", true)}
       else
-        long_opt << "=VAL"
-        if default_value = d.default_value
-          desc_str << " default: #{default_value.inspect}"
+        if d.action?
+          obj = eval("self", d.__block__.binding)
+          (class << obj; self; end).module_eval do
+            attr_accessor :option_parser
+          end
+          obj.option_parser = option_parser
+          o.on(*args, &d.__block__)
+        elsif d.separator?
+          o.separator(d.description)
+        else
+          long_opt << "=VAL"
+          if default_value = d.default_value
+            desc_str << " default: #{default_value.inspect}"
+          end
+          o.on(*args){|val| d.__parent__.send("#{d.__name__}=", val)}
         end
-        o.on(*args){|val| d.__parent__.send("#{d.__name__}=", val)}
       end
 
     else
