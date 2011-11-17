@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "tengine_support"
-  s.version = "0.3.0"
+  s.version = "0.3.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["saishu", "w-irie", "taigou", "totty", "hiroshinakao", "g-morita", "guemon", "aoetk", "hattori-at-nt", "t-yamada", "y-karashima", "akm"]
-  s.date = "2011-11-15"
+  s.date = "2011-11-17"
   s.description = "tengine_support provides utility classes/modules which is not included in active_support. It doesn't depend on other tengine gems."
   s.email = "tengine@nautilus-technologies.com"
   s.extra_rdoc_files = [
@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.files = [
     ".document",
     ".rspec",
+    ".travis.yml",
     "Gemfile",
     "README.md",
     "Rakefile",
@@ -30,7 +31,8 @@ Gem::Specification.new do |s|
     "spec/tengine_support/yaml_with_erb_spec/test1.yml.erb",
     "spec/tengine_support/yaml_with_erb_spec/test2_with_erb.yml",
     "spec/tengine_support/yaml_with_erb_spec/test3_without_erb.yml",
-    "spec/tengine_support/yaml_with_erb_spec/test4_with_invalid_erb.yml"
+    "spec/tengine_support/yaml_with_erb_spec/test4_with_invalid_erb.yml",
+    "tengine_support.gemspec"
   ]
   s.homepage = "http://github.com/tengine/tengine_support"
   s.licenses = ["MPL/LGPL"]
