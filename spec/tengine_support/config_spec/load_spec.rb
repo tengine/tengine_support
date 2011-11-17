@@ -4,17 +4,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 require 'tengine/support/yaml_with_erb'
 
 describe "config" do
-
-  context "app1 setting" do
-    before(:all) do
-      @suite = build_suite1
-      @suite.load(YAML.load_file(File.expand_path('load_spec_01.yml.erb', File.dirname(__FILE__))))
-    end
-
-    subject do
-      @suite
-    end
-
+  shared_examples_for "load_spec_01.yml's data" do
     describe "accessors" do
       it { subject.action.should == nil}
       it { subject.config.should == nil}
@@ -50,6 +40,27 @@ describe "config" do
       it { subject.process_stderr_log.rotation.should == 5}
       it { subject.process_stderr_log.rotation_size.should == 1024 * 1024 * 1024}
       it { subject.process_stderr_log.level.should == "info"}
+    end
+  end
+
+
+  context "app1 setting" do
+    describe :load do
+      before(:all) do
+        @suite = build_suite1
+        @suite.load(YAML.load_file(File.expand_path('load_spec_01.yml.erb', File.dirname(__FILE__))))
+      end
+      subject{ @suite }
+      it_should_behave_like "load_spec_01.yml's data"
+    end
+
+    describe :load_file do
+      before(:all) do
+        @suite = build_suite1
+        @suite.load_file(File.expand_path('load_spec_01.yml.erb', File.dirname(__FILE__)))
+      end
+      subject{ @suite }
+      it_should_behave_like "load_spec_01.yml's data"
     end
 
   end
