@@ -46,7 +46,21 @@ module Tengine::Support::Config::Definition
         define_method(field.name){ field }
       end
       self.class_eval do
-        attr_accessor field.name
+        field_name = field.name
+        ivar_name = :"@#{field_name}"
+
+        define_method(field_name) do
+          if result = instance_variable_get(ivar_name)
+            result
+          else
+            field = child_by_name(field_name)
+            result = field.default_value
+            instance_variable_set(ivar_name, result)
+            result
+          end
+        end
+
+        attr_writer field_name
       end
     end
 
@@ -65,6 +79,7 @@ module Tengine::Support::Config::Definition
       end
       self.definition_reference_names += definition_reference_names
     end
+
   end
 
   attr_accessor :name, :parent, :children

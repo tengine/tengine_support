@@ -25,7 +25,6 @@ module Tengine::Support::Config::Definition::HasManyChildren
     result.parent = self
     result.name = name
     result.instantiate_children
-
     dependencies = options[:dependencies] || {}
     klass.definition_reference_names.each do |res_name|
       name_array = dependencies[res_name]
@@ -39,17 +38,19 @@ module Tengine::Support::Config::Definition::HasManyChildren
     defaults.each do |key, value|
       child = result.child_by_name(key)
       raise "child not found for #{key.inspct} in #{result.name}" unless child
-      child.default = value
+      child.default = value if value
     end
 
     children << result
     result.instance_eval(&block) if block
+    (class << self; self; end).class_eval{ define_method(name){ result } }
     result
   end
 
   def group(name, options = {}, &block)
     result = Tengine::Support::Config::Definition::Group.new(name, options)
     result.parent = self
+    (class << self; self; end).class_eval{ define_method(name){ result } }
     children << result
     result.instance_eval(&block) if block
     result

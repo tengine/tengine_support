@@ -12,7 +12,6 @@ module App1
     parameter :logger_name
     depends :process_config
     depends :log_common
-
     field :output,
       :default => proc{
         process_config.daemon ?
@@ -28,8 +27,6 @@ module App1
       :default => proc{ log_common.level },
       :default_description => lambda{"value of #{log_common.long}-level"}
   end
-
-
 end
 
 describe "config" do
@@ -55,7 +52,7 @@ describe "config" do
     end
 
     context "dynamic" do
-      subject do
+      before(:all) do
         @suite = Tengine::Support::Config.suite do
           field(:action, "test|load|start|enable|stop|force-stop|status|activate", :type => :string)
           field(:config, "path/to/config_file", :type => :string)
@@ -87,7 +84,39 @@ describe "config" do
               [:db, :port] => :P,
             })
         end
+      end
+
+      subject do
         @suite
+      end
+
+      describe "accessors" do
+        it { subject.action.should == nil}
+        it { subject.config.should == nil}
+        it { subject.process.should be_a(App1::ProcessConfig) }
+        it { subject.process.daemon.should == nil}
+        it { subject.process.pid_dir.should == nil}
+        it { subject.db.should be_a(Tengine::Support::Config::Mongoid::Connection) }
+        it { subject.db.host.should == "localhost"}
+        it { subject.db.port.should == 27017}
+        it { subject.db.username.should == nil}
+        it { subject.db.password.should == nil}
+        it { subject.db.database.should == "tengine_production"}
+        it { subject.event_queue.connection.host.should == "localhost"}
+        it { subject.event_queue.connection.port.should == 5672}
+        it { subject.event_queue.exchange.name.should == "tengine_event_exchange"}
+        it { subject.event_queue.exchange.type.should == 'direct'}
+        it { subject.event_queue.exchange.durable.should == true}
+        it { subject.event_queue.queue.name.should == "tengine_event_queue"}
+        it { subject.event_queue.queue.durable.should == true}
+        it { subject.log_common.output.should == nil}
+        it { subject.log_common.rotation.should == 3}
+        it { subject.log_common.rotation_size.should == 1024 * 1024}
+        it { subject.log_common.level.should == "info"}
+        it { subject.application_log.output.should == "STDOUT"}
+        it { subject.application_log.rotation.should == nil}
+        it { subject.application_log.rotation_size.should == nil}
+        it { subject.application_log.level.should == nil}
       end
 
       it :to_hash do
