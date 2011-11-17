@@ -55,12 +55,11 @@ module Tengine::Support::Config::Definition
             result
           else
             field = child_by_name(field_name)
-            result = field.default_value
+            result = field ? field.default_value : nil
             instance_variable_set(ivar_name, result)
             result
           end
         end
-
         attr_writer field_name
       end
     end
@@ -102,7 +101,7 @@ module Tengine::Support::Config::Definition
   end
 
   def child_by_name(__name__)
-    children.detect{|child| child.__name__ == __name__}
+    (children || []).detect{|child| child.__name__ == __name__}
   end
 
   def to_hash
