@@ -37,7 +37,7 @@ describe "config" do
       describe App1::ProcessConfig.daemon do
         it { subject.should be_a(Tengine::Support::Config::Definition::Field)}
         its(:type){ should == :boolean }
-        its(:name){ should == :daemon }
+        its(:__name__){ should == :daemon }
         its(:description){ should == 'process works on background.'}
         its(:default){ should == nil}
       end
@@ -45,7 +45,7 @@ describe "config" do
       describe App1::ProcessConfig.pid_dir do
         it { subject.should be_a(Tengine::Support::Config::Definition::Field)}
         its(:type){ should == :directory }
-        its(:name){ should == :pid_dir }
+        its(:__name__){ should == :pid_dir }
         its(:description){ should == 'path/to/dir for PID created.'}
         its(:default){ should == nil}
       end
@@ -184,7 +184,7 @@ describe "config" do
       end
 
       it "suite has children" do
-        subject.children.map(&:name).should == [
+        subject.children.map(&:__name__).should == [
           :action, :config,
           :process, :db, :event_queue, :log_common,
           :application_log, :process_stdout_log, :process_stderr_log]
@@ -228,9 +228,9 @@ describe "config" do
           application_log = subject.find(:application_log)
           log_common.should_not == application_log
           log_common.children.each do |log_common_child|
-            application_log_child = application_log.child_by_name(log_common_child.name)
+            application_log_child = application_log.child_by_name(log_common_child.__name__)
             application_log_child.should_not be_nil
-            application_log_child.name.should == log_common_child.name
+            application_log_child.__name__.should == log_common_child.__name__
             application_log_child.object_id.should_not == log_common_child.object_id
             application_log_child.parent.should == application_log
             log_common_child.parent.should == log_common

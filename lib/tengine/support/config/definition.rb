@@ -22,17 +22,17 @@ module Tengine::Support::Config::Definition
   end
 
   module ClassMethods
-    def field(name, *args)
+    def field(__name__, *args)
       attrs = args.last.is_a?(Hash) ? args.pop : {}
       attrs[:description] = args.first unless args.empty?
-      attrs[:name] = name
+      attrs[:__name__] = __name__
       attrs[:parent] = self
 
       if (superclass < Tengine::Support::Config::Definition) &&
           (self.children == self.superclass.children)
         self.children = self.superclass.children.dup
       end
-      if field = children.detect{|child| child.name == name}
+      if field = children.detect{|child| child.__name__ == __name__}
         new_field = field.dup
         new_field.update(attrs)
         idx = self.children.index(field)
@@ -43,10 +43,10 @@ module Tengine::Support::Config::Definition
         self.children << field
       end
       (class << self; self; end).module_eval do
-        define_method(field.name){ field }
+        define_method(field.__name__){ field }
       end
       self.class_eval do
-        field_name = field.name
+        field_name = field.__name__
         ivar_name = :"@#{field_name}"
 
         define_method(field_name) do
@@ -64,7 +64,7 @@ module Tengine::Support::Config::Definition
       end
     end
 
-    def parameter(name)
+    def parameter(__name__)
     end
 
     def depends(*definition_reference_names)
@@ -82,7 +82,7 @@ module Tengine::Support::Config::Definition
 
   end
 
-  attr_accessor :name, :parent, :children
+  attr_accessor :__name__, :parent, :children
 
   def instantiate_children
     @children = self.class.children.map do |class_child|
@@ -92,13 +92,13 @@ module Tengine::Support::Config::Definition
     end
   end
 
-  def child_by_name(name)
-    children.detect{|child| child.name == name}
+  def child_by_name(__name__)
+    children.detect{|child| child.__name__ == __name__}
   end
 
   def to_hash
     children.inject({}) do |dest, child|
-      dest[child.name] = child.to_hash
+      dest[child.__name__] = child.to_hash
       dest
     end
   end

@@ -1,7 +1,7 @@
 require 'tengine/support/config/definition'
 
 class Tengine::Support::Config::Definition::Field
-  attr_accessor :name, :parent
+  attr_accessor :__name__, :parent
   attr_accessor :type, :default_description, :default
   attr_writer :description
   def initialize(attrs = {})

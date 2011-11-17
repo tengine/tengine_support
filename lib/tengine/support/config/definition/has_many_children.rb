@@ -6,8 +6,8 @@ module Tengine::Support::Config::Definition::HasManyChildren
     @children ||= []
   end
 
-  def child_by_name(name)
-    children.detect{|child| child.name == name}
+  def child_by_name(__name__)
+    children.detect{|child| child.__name__ == __name__}
   end
 
   def find(name_array)
@@ -20,15 +20,15 @@ module Tengine::Support::Config::Definition::HasManyChildren
     end
   end
 
-  def add(name, klass, options = {}, &block)
+  def add(__name__, klass, options = {}, &block)
     result = klass.new
     result.parent = self
-    result.name = name
+    result.__name__ = __name__
     result.instantiate_children
     dependencies = options[:dependencies] || {}
     klass.definition_reference_names.each do |res_name|
       name_array = dependencies[res_name]
-      raise "missing dependency of #{name.inspect} in :dependencies options to add(#{name.inspect}, #{klass.name}...)" unless name_array
+      raise "missing dependency of #{__name__.inspect} in :dependencies options to add(#{__name__.inspect}, #{klass.name}...)" unless name_array
       obj = root.find(Array(name_array))
       raise "#{name_array.inspect} not found" unless obj
       result.send("#{res_name}=", obj)
@@ -37,31 +37,31 @@ module Tengine::Support::Config::Definition::HasManyChildren
     defaults = options[:defaults] || {}
     defaults.each do |key, value|
       child = result.child_by_name(key)
-      raise "child not found for #{key.inspct} in #{result.name}" unless child
+      raise "child not found for #{key.inspct} in #{result.__name__}" unless child
       child.default = value if value
     end
 
     children << result
     result.instance_eval(&block) if block
-    (class << self; self; end).class_eval{ define_method(name){ result } }
+    (class << self; self; end).class_eval{ define_method(__name__){ result } }
     result
   end
 
-  def group(name, options = {}, &block)
-    result = Tengine::Support::Config::Definition::Group.new(name, options)
+  def group(__name__, options = {}, &block)
+    result = Tengine::Support::Config::Definition::Group.new(__name__, options)
     result.parent = self
-    (class << self; self; end).class_eval{ define_method(name){ result } }
+    (class << self; self; end).class_eval{ define_method(__name__){ result } }
     children << result
     result.instance_eval(&block) if block
     result
   end
 
-  def field(name, *args)
+  def field(__name__, *args)
     attrs = args.last.is_a?(Hash) ? args.pop : {}
     attrs[:description] = args.first unless args.empty?
-    attrs[:name] = name
+    attrs[:__name__] = __name__
     attrs[:parent] = self
-    if field = children.detect{|child| child.name == name}
+    if field = children.detect{|child| child.__name__ == __name__}
       new_field = field.dup
       new_field.update(attrs)
       idx = self.children.index(field)
@@ -72,13 +72,13 @@ module Tengine::Support::Config::Definition::HasManyChildren
       self.children << field
     end
     (class << self; self; end).module_eval do
-      attr_accessor field.name
+      attr_accessor field.__name__
     end
   end
 
   def to_hash
     children.inject({}) do |dest, child|
-      dest[child.name] = child.to_hash
+      dest[child.__name__] = child.to_hash
       dest
     end
   end
