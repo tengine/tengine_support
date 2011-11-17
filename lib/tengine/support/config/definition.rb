@@ -81,9 +81,9 @@ module Tengine::Support::Config::Definition
     children.detect{|child| child.name == name}
   end
 
-  def skelton
+  def to_hash
     children.inject({}) do |dest, child|
-      dest[child.name] = child.skelton
+      dest[child.name] = child.to_hash
       dest
     end
   end

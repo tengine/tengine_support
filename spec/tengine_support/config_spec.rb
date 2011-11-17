@@ -155,8 +155,8 @@ describe "config" do
         end
       end
 
-      it "skelton" do
-        subject.skelton.should == {
+      it :to_hash do
+        subject.to_hash.should == {
           :action => nil,
           :config => nil,
           :process => {

@@ -24,7 +24,7 @@ class Tengine::Support::Config::Definition::Field
     default.respond_to?(:to_proc) ? parent.instance_eval(&default) : default
   end
 
-  def skelton
+  def to_hash
     default_value
   end
 
