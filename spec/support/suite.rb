@@ -25,9 +25,12 @@ def build_suite1
       :logger_name => "#{File.basename($PROGRAM_NAME)}_stderr",
       :dependencies => { :process_config => :process, :log_common => :log_common,})
     mapping({
+        [:action] => :k,
         [:process, :daemon] => :D,
         [:db, :host] => :O,
         [:db, :port] => :P,
+        [:db, :username] => :U,
+        [:db, :password] => :S,
       })
   end
 

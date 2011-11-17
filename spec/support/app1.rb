@@ -13,15 +13,15 @@ module App1
       :default => proc{
         process_config.daemon ?
         "./log/#{logger_name}.log" : "STDOUT" },
-      :default_description => lambda{"if daemon process then \"./log/#{logger_name}.log\" else \"STDOUT\""}
+      :default_description => proc{"if daemon process then \"./log/#{logger_name}.log\" else \"STDOUT\""}
     field :rotation,
       :default => proc{ log_common.rotation },
-      :default_description => lambda{"value of #{log_common.long}-rotation"}
+      :default_description => proc{"value of #{log_common.long_opt}-rotation"}
     field :rotation_size,
       :default => proc{ log_common.rotation_size },
-      :default_description => lambda{"value of #{log_common.long}-rotation-size"}
+      :default_description => proc{"value of #{log_common.long_opt}-rotation-size"}
     field :level,
       :default => proc{ log_common.level },
-      :default_description => lambda{"value of #{log_common.long}-level"}
+      :default_description => proc{"value of #{log_common.long_opt}-level"}
   end
 end

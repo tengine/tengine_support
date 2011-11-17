@@ -43,7 +43,6 @@ describe "config" do
     end
   end
 
-
   context "app1 setting" do
     describe :load do
       before(:all) do

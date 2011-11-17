@@ -92,4 +92,17 @@ module Tengine::Support::Config::Definition::HasManyChildren
     end
   end
 
+  def accept_visitor(visitor)
+    visitor.visit(self)
+  end
+
+  def name_array
+    (__parent__ ? __parent__.name_array : []) + [__name__]
+  end
+
+  def get_value(obj)
+    obj.is_a?(Proc) ? self.instance_eval(&obj) : obj
+  end
+
+
 end

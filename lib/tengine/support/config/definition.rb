@@ -7,6 +7,7 @@ module Tengine::Support::Config::Definition
   autoload :Group, 'tengine/support/config/definition/group'
   autoload :Suite, 'tengine/support/config/definition/suite'
   autoload :HasManyChildren, 'tengine/support/config/definition/has_many_children'
+  autoload :OptparseVisitor, 'tengine/support/config/definition/optparse_visitor'
 
   class << self
     def included(klass)
@@ -64,7 +65,15 @@ module Tengine::Support::Config::Definition
       end
     end
 
-    def parameter(__name__)
+    def parameters
+      @parameters ||= []
+    end
+
+    def parameter(parameter_name)
+      parameters << parameter_name
+      self.class_eval do
+        attr_accessor parameter_name
+      end
     end
 
     def depends(*definition_reference_names)
@@ -105,6 +114,31 @@ module Tengine::Support::Config::Definition
 
   def load(hash)
     hash.each{|__name__, value| send("#{__name__}=", value)}
+  end
+
+  def accept_visitor(visitor)
+    visitor.visit(self)
+  end
+
+  def root
+    __parent__ ? __parent__.root : nil
+  end
+
+  def name_array
+    (__parent__ ? __parent__.name_array : []) + [__name__]
+  end
+
+  def get_value(obj)
+    obj.is_a?(Proc) ? self.instance_eval(&obj) : obj
+  end
+
+  def short_opt
+    r = root.mapping[ name_array ]
+    r ? "-#{r}" : nil
+  end
+
+  def long_opt
+    '--' << name_array.join('-').gsub(%r{_}, '-')
   end
 
 end
