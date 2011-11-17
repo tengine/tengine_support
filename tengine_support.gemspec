@@ -23,10 +23,32 @@ Gem::Specification.new do |s|
     "README.md",
     "Rakefile",
     "VERSION",
+    "gemfiles/Gemfile.activesupport-3.0.10",
+    "gemfiles/Gemfile.activesupport-3.1.1",
     "lib/tengine/support.rb",
+    "lib/tengine/support/config.rb",
+    "lib/tengine/support/config/amqp.rb",
+    "lib/tengine/support/config/definition.rb",
+    "lib/tengine/support/config/definition/field.rb",
+    "lib/tengine/support/config/definition/group.rb",
+    "lib/tengine/support/config/definition/has_many_children.rb",
+    "lib/tengine/support/config/definition/optparse_visitor.rb",
+    "lib/tengine/support/config/definition/suite.rb",
+    "lib/tengine/support/config/logger.rb",
+    "lib/tengine/support/config/mongoid.rb",
     "lib/tengine/support/yaml_with_erb.rb",
     "lib/tengine_support.rb",
     "spec/spec_helper.rb",
+    "spec/support/app1.rb",
+    "spec/support/suite.rb",
+    "spec/tengine_support/config/amqp_spec.rb",
+    "spec/tengine_support/config/logger_spec.rb",
+    "spec/tengine_support/config/mongoid_spec.rb",
+    "spec/tengine_support/config_spec.rb",
+    "spec/tengine_support/config_spec/load_config_file_by_config_option_spec.rb",
+    "spec/tengine_support/config_spec/load_spec.rb",
+    "spec/tengine_support/config_spec/load_spec_01.yml.erb",
+    "spec/tengine_support/config_spec/parse_spec.rb",
     "spec/tengine_support/yaml_with_erb_spec.rb",
     "spec/tengine_support/yaml_with_erb_spec/test1.yml.erb",
     "spec/tengine_support/yaml_with_erb_spec/test2_with_erb.yml",
@@ -44,6 +66,7 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+      s.add_runtime_dependency(%q<activesupport>, [">= 3.0.0"])
       s.add_development_dependency(%q<rspec>, ["~> 2.6.0"])
       s.add_development_dependency(%q<yard>, ["~> 0.7.2"])
       s.add_development_dependency(%q<bundler>, ["~> 1.0.18"])
@@ -52,6 +75,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<autotest>, [">= 0"])
       s.add_development_dependency(%q<rdiscount>, [">= 0"])
     else
+      s.add_dependency(%q<activesupport>, [">= 3.0.0"])
       s.add_dependency(%q<rspec>, ["~> 2.6.0"])
       s.add_dependency(%q<yard>, ["~> 0.7.2"])
       s.add_dependency(%q<bundler>, ["~> 1.0.18"])
@@ -61,6 +85,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<rdiscount>, [">= 0"])
     end
   else
+    s.add_dependency(%q<activesupport>, [">= 3.0.0"])
     s.add_dependency(%q<rspec>, ["~> 2.6.0"])
     s.add_dependency(%q<yard>, ["~> 0.7.2"])
     s.add_dependency(%q<bundler>, ["~> 1.0.18"])

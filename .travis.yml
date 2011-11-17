@@ -5,3 +5,6 @@ rvm:
   - ruby-head
   - jruby
   - ree
+gemfile:
+  - gemfiles/Gemfile.activesupport-3.0.10
+  - gemfiles/Gemfile.activesupport-3.1.1
