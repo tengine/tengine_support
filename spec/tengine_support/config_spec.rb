@@ -90,6 +90,70 @@ describe "config" do
         @suite
       end
 
+      it :to_hash do
+        subject.to_hash.should == {
+          :action => nil,
+          :config => nil,
+          :process => {
+            :daemon => nil,
+            :pid_dir => nil,
+          },
+          :db => {
+            :host => 'localhost',
+            :port => 27017,
+            :username => nil,
+            :password => nil,
+            :database => 'tengine_production'
+          },
+          :event_queue => {
+            :connection => {
+              :host => 'localhost',
+              :port => 5672,
+              :vhost => nil,
+              :user  => nil,
+              :pass  => nil,
+            },
+            :exchange => {
+              :name => 'tengine_event_exchange',
+              :type => 'direct',
+              :durable => true,
+            },
+            :queue => {
+              :name => 'tengine_event_queue',
+              :durable => true,
+            },
+          },
+
+          :log_common => {
+            :output        => nil        ,
+            :rotation      => 3          ,
+            :rotation_size => 1024 * 1024,
+            :level         => 'info'     ,
+          }.freeze,
+
+          :application_log => {
+            :output        => "STDOUT",
+            :rotation      => nil,
+            :rotation_size => nil,
+            :level         => nil,
+          }.freeze,
+
+          :process_stdout_log => {
+            :output        => "STDOUT",
+            :rotation      => nil,
+            :rotation_size => nil,
+            :level         => nil,
+          }.freeze,
+
+          :process_stderr_log => {
+            :output        => "STDOUT",
+            :rotation      => nil,
+            :rotation_size => nil,
+            :level         => nil,
+          }.freeze,
+        }
+      end
+
       it "suite has children" do
         subject.children.map(&:name).should == [
           :action, :config,
@@ -155,71 +219,7 @@ describe "config" do
         end
       end
 
-      it :to_hash do
-        subject.to_hash.should == {
-          :action => nil,
-          :config => nil,
-          :process => {
-            :daemon => nil,
-            :pid_dir => nil,
-          },
-          :db => {
-            :host => 'localhost',
-            :port => 27017,
-            :username => nil,
-            :password => nil,
-            :database => 'tengine_production'
-          },
-          :event_queue => {
-            :connection => {
-              :host => 'localhost',
-              :port => 5672,
-              :vhost => nil,
-              :user  => nil,
-              :pass  => nil,
-            },
-            :exchange => {
-              :name => 'tengine_event_exchange',
-              :type => 'direct',
-              :durable => true,
-            },
-            :queue => {
-              :name => 'tengine_event_queue',
-              :durable => true,
-            },
-          },
-
-          :log_common => {
-            :output        => nil        ,
-            :rotation      => 3          ,
-            :rotation_size => 1024 * 1024,
-            :level         => 'info'     ,
-          }.freeze,
-
-          :application_log => {
-            :output        => "STDOUT",
-            :rotation      => nil,
-            :rotation_size => nil,
-            :level         => nil,
-          }.freeze,
-
-          :process_stdout_log => {
-            :output        => "STDOUT",
-            :rotation      => nil,
-            :rotation_size => nil,
-            :level         => nil,
-          }.freeze,
-
-          :process_stderr_log => {
-            :output        => "STDOUT",
-            :rotation      => nil,
-            :rotation_size => nil,
-            :level         => nil,
-          }.freeze,
-        }
-      end
     end
-
   end
 
 end
