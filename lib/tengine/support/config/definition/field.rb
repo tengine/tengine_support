@@ -7,6 +7,10 @@ class Tengine::Support::Config::Definition::Field
     attrs.each{|k, v| send("#{k}=", v)}
   end
 
+  def action?
+    !!__block__
+  end
+
   def update(attrs)
     attrs.each{|k, v| send("#{k}=", v)}
   end

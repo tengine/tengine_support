@@ -18,14 +18,12 @@ class Tengine::Support::Config::Definition::OptparseVisitor
     when Tengine::Support::Config::Definition::Suite then
       option_parser.banner = d.banner
       d.children.each{|child| child.accept_visitor(self)}
-      d.actions.each{|action| action.accept_visitor(self)}
     when Tengine::Support::Config::Definition::Group then
-      if (d.children + d.actions).any?{|c| c.is_a?(Tengine::Support::Config::Definition::Field)}
+      if d.children.any?{|c| c.is_a?(Tengine::Support::Config::Definition::Field)}
         o.separator ""
         o.separator "#{d.__name__}:"
       end
       d.children.each{|child| child.accept_visitor(self)}
-      d.actions.each{|action| action.accept_visitor(self)}
     when Tengine::Support::Config::Definition then
       o.separator ""
       o.separator "#{d.__name__}:"

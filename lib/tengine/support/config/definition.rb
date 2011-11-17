@@ -141,4 +141,6 @@ module Tengine::Support::Config::Definition
     '--' << name_array.join('-').gsub(%r{_}, '-')
   end
 
+  def action?; false; end
+
 end
