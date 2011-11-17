@@ -49,10 +49,11 @@ describe 'Tengine::Support::Config::Logger' do
 
     context "ファイル名の場合" do
       before do
-        @filepath = Tempfile.new("test.log")
+        @tempfile = Tempfile.new("test.log")
+        @filepath = @tempfile.path
       end
       after do
-        @filepath.close
+        @tempfile.close
       end
 
       %w[daily weekly monthly].each do |shift_age|
