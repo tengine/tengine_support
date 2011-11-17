@@ -2,52 +2,13 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 module App1
-  class DbConfig
-    include Tengine::Support::Config::Definition
-    field :host    , 'hostname to connect db.', :default => 'localhost', :type => :string
-    field :port    , "port to connect db.", :default => 27017, :type => :integer
-    field :username, 'username to connect db.', :type => :string
-    field :password, 'password to connect db.', :type => :string
-    field :database, 'database name to connect db.', :type => :string
-  end
-
   class ProcessConfig
     include Tengine::Support::Config::Definition
     field :daemon, "process works on background.", :type => :boolean
     field :pid_dir, "path/to/dir for PID created.", :type => :directory
   end
 
-  class AmqpConnection
-    include Tengine::Support::Config::Definition
-    field :host , 'hostname to connect queue.', :default => 'localhost', :type => :string
-    field :port , "port to connect queue.", :default => 5672, :type => :integer
-    field :vhost, "vhost to connect queue.", :type => :string
-    field :user , "username to connect queue.", :type => :string
-    field :pass , "password to connect queue.", :type => :string
-  end
-
-  class AmqpExchange
-    include Tengine::Support::Config::Definition
-    field :name   , "exchange name.", :type => :string
-    field :type   , "exchange type.", :type => :string, :default => 'direct'
-    field :durable, "exchange durable.", :type => :boolean, :default => true
-  end
-
-  class AmqpQueue
-    include Tengine::Support::Config::Definition
-    field :name   , "queue name.", :type => :string
-    field :durable, "queue durable.", :type => :boolean, :default => true
-  end
-
-  class LoggerConfigCommon
-    include Tengine::Support::Config::Definition
-    field :output, 'file path or "STDOUT" / "STDERR".', :type => :string
-    field :rotation, 'rotation file count or daily,weekly,monthly.', :type => :string
-    field :rotation_size, 'number of max log file size.', :type => :integer
-    field :level, 'debug/info/warn/error/fatal.', :type => :string
-  end
-
-  class LoggerConfig < LoggerConfigCommon
+  class LoggerConfig < Tengine::Support::Config::Logger
     parameter :logger_name
     depends :process_config
     depends :log_common
@@ -75,21 +36,6 @@ describe "config" do
 
   context "app1 setting" do
     context "static" do
-      describe App1::DbConfig.host do
-        it { subject.should be_a(Tengine::Support::Config::Definition::Field)}
-        its(:type){ should == :string }
-        its(:name){ should == :host }
-        its(:description){ should == 'hostname to connect db.'}
-        its(:default){ should == 'localhost'}
-      end
-
-      describe App1::DbConfig.port do
-        it { subject.should be_a(Tengine::Support::Config::Definition::Field)}
-        its(:type){ should == :integer }
-        its(:name){ should == :port }
-        its(:description){ should == 'port to connect db.'}
-        its(:default){ should == 27017}
-      end
 
       describe App1::ProcessConfig.daemon do
         it { subject.should be_a(Tengine::Support::Config::Definition::Field)}
@@ -106,22 +52,6 @@ describe "config" do
         its(:description){ should == 'path/to/dir for PID created.'}
         its(:default){ should == nil}
       end
-
-      describe App1::LoggerConfigCommon.output do
-        it { subject.should be_a(Tengine::Support::Config::Definition::Field)}
-        its(:type){ should == :string }
-        its(:name){ should == :output }
-        its(:description){ should == 'file path or "STDOUT" / "STDERR".'}
-        its(:default){ should == nil}
-      end
-
-      describe App1::LoggerConfig.output do
-        it { subject.should be_a(Tengine::Support::Config::Definition::Field)}
-        its(:type){ should == :string }
-        its(:name){ should == :output }
-        its(:description){ should be_a(Proc)}
-        its(:default){ should be_a(Proc)}
-      end
     end
 
     context "dynamic" do
@@ -130,13 +60,13 @@ describe "config" do
           field(:action, "test|load|start|enable|stop|force-stop|status|activate", :type => :string)
           field(:config, "path/to/config_file", :type => :string)
           add(:process, App1::ProcessConfig)
-          add(:db, App1::DbConfig, :defaults => {:database => "tengine_production"})
+          add(:db, Tengine::Support::Config::Mongoid::Connection, :defaults => {:database => "tengine_production"})
           group(:event_queue) do
-            add(:connection, App1::AmqpConnection)
-            add(:exchange  , App1::AmqpExchange, :defaults => {:name => 'tengine_event_exchange'})
-            add(:queue     , App1::AmqpQueue   , :defaults => {:name => 'tengine_event_queue'})
+            add(:connection, Tengine::Support::Config::Amqp::Connection)
+            add(:exchange  , Tengine::Support::Config::Amqp::Exchange, :defaults => {:name => 'tengine_event_exchange'})
+            add(:queue     , Tengine::Support::Config::Amqp::Queue   , :defaults => {:name => 'tengine_event_queue'})
           end
-          add(:log_common, App1::LoggerConfigCommon,
+          add(:log_common, Tengine::Support::Config::Logger,
             :defaults => {
               :rotation      => 3          ,
               :rotation_size => 1024 * 1024,
@@ -170,12 +100,12 @@ describe "config" do
       context "suite returns child by name" do
         {
           :process => App1::ProcessConfig,
-          :db => App1::DbConfig,
+          :db => Tengine::Support::Config::Mongoid::Connection,
           :event_queue => Tengine::Support::Config::Definition::Group,
           [:event_queue, :connection] => NilClass,
           [:event_queue, :exchange  ] => NilClass,
           [:event_queue, :queue     ] => NilClass,
-          :log_common => App1::LoggerConfigCommon,
+          :log_common => Tengine::Support::Config::Logger,
           :application_log => App1::LoggerConfig,
           :process_stdout_log => App1::LoggerConfig,
           :process_stderr_log => App1::LoggerConfig,
@@ -185,12 +115,12 @@ describe "config" do
 
         {
           :process => App1::ProcessConfig,
-          :db => App1::DbConfig,
+          :db => Tengine::Support::Config::Mongoid::Connection,
           :event_queue => Tengine::Support::Config::Definition::Group,
-          [:event_queue, :connection] => App1::AmqpConnection,
-          [:event_queue, :exchange  ] => App1::AmqpExchange,
-          [:event_queue, :queue     ] => App1::AmqpQueue,
-          :log_common => App1::LoggerConfigCommon,
+          [:event_queue, :connection] => Tengine::Support::Config::Amqp::Connection,
+          [:event_queue, :exchange  ] => Tengine::Support::Config::Amqp::Exchange,
+          [:event_queue, :queue     ] => Tengine::Support::Config::Amqp::Queue,
+          :log_common => Tengine::Support::Config::Logger,
           :application_log => App1::LoggerConfig,
           :process_stdout_log => App1::LoggerConfig,
           :process_stderr_log => App1::LoggerConfig,
@@ -221,7 +151,7 @@ describe "config" do
           application_log.process_config.should_not be_nil
           application_log.process_config.should be_a(App1::ProcessConfig)
           application_log.log_common.should_not be_nil
-          application_log.log_common.should be_a(App1::LoggerConfigCommon)
+          application_log.log_common.should be_a(Tengine::Support::Config::Logger)
         end
       end
 
