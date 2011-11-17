@@ -7,7 +7,7 @@ describe 'Tengine::Support::Config::Mongoid' do
     describe Tengine::Support::Config::Mongoid::Connection.host do
       it { subject.should be_a(Tengine::Support::Config::Definition::Field)}
       its(:type){ should == :string }
-      its(:name){ should == :host }
+      its(:__name__){ should == :host }
       its(:description){ should == 'hostname to connect db.'}
       its(:default){ should == 'localhost'}
     end
@@ -15,7 +15,7 @@ describe 'Tengine::Support::Config::Mongoid' do
     describe Tengine::Support::Config::Mongoid::Connection.port do
       it { subject.should be_a(Tengine::Support::Config::Definition::Field)}
       its(:type){ should == :integer }
-      its(:name){ should == :port }
+      its(:__name__){ should == :port }
       its(:description){ should == 'port to connect db.'}
       its(:default){ should == 27017}
     end

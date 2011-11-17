@@ -114,9 +114,9 @@ describe "config" do
         it { subject.log_common.rotation_size.should == 1024 * 1024}
         it { subject.log_common.level.should == "info"}
         it { subject.application_log.output.should == "STDOUT"}
-        it { subject.application_log.rotation.should == nil}
-        it { subject.application_log.rotation_size.should == nil}
-        it { subject.application_log.level.should == nil}
+        it { subject.application_log.rotation.should == 3}
+        it { subject.application_log.rotation_size.should == 1024 * 1024}
+        it { subject.application_log.level.should == "info"}
       end
 
       it :to_hash do
@@ -162,23 +162,17 @@ describe "config" do
 
           :application_log => {
             :output        => "STDOUT",
-            :rotation      => nil,
-            :rotation_size => nil,
-            :level         => nil,
+            :rotation=>3, :rotation_size=>1048576, :level=>"info"
           }.freeze,
 
           :process_stdout_log => {
             :output        => "STDOUT",
-            :rotation      => nil,
-            :rotation_size => nil,
-            :level         => nil,
+            :rotation=>3, :rotation_size=>1048576, :level=>"info"
           }.freeze,
 
           :process_stderr_log => {
             :output        => "STDOUT",
-            :rotation      => nil,
-            :rotation_size => nil,
-            :level         => nil,
+            :rotation=>3, :rotation_size=>1048576, :level=>"info"
           }.freeze,
         }
       end

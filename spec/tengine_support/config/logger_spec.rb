@@ -8,7 +8,7 @@ describe 'Tengine::Support::Config::Logger' do
     describe Tengine::Support::Config::Logger.output do
       it { subject.should be_a(Tengine::Support::Config::Definition::Field)}
       its(:type){ should == :string }
-      its(:name){ should == :output }
+      its(:__name__){ should == :output }
       its(:description){ should == 'file path or "STDOUT" / "STDERR".'}
       its(:default){ should == nil}
     end
