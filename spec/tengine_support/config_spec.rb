@@ -63,7 +63,7 @@ describe "config" do
 
       it :to_hash do
         subject.to_hash.should == {
-          :action => nil,
+          :action => 'start',
           :config => nil,
           :process => {
             :daemon => nil,
@@ -123,7 +123,7 @@ describe "config" do
         subject.children.map(&:__name__).should == [
           :action, :config,
           :process, :db, :event_queue, :log_common,
-          :application_log, :process_stdout_log, :process_stderr_log]
+          :application_log, :process_stdout_log, :process_stderr_log, :general]
       end
 
       context "suite returns child by name" do

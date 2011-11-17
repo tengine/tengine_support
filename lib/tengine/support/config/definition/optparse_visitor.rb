@@ -18,25 +18,30 @@ class Tengine::Support::Config::Definition::OptparseVisitor
     when Tengine::Support::Config::Definition::Suite then
       option_parser.banner = d.banner
       d.children.each{|child| child.accept_visitor(self)}
+      d.actions.each{|action| action.accept_visitor(self)}
     when Tengine::Support::Config::Definition::Group then
-      o.separator ""
-      o.separator "#{d.__name__}:"
+      if (d.children + d.actions).any?{|c| c.is_a?(Tengine::Support::Config::Definition::Field)}
+        o.separator ""
+        o.separator "#{d.__name__}:"
+      end
       d.children.each{|child| child.accept_visitor(self)}
+      d.actions.each{|action| action.accept_visitor(self)}
     when Tengine::Support::Config::Definition then
       o.separator ""
       o.separator "#{d.__name__}:"
       d.children.each{|child| child.accept_visitor(self)}
     when Tengine::Support::Config::Definition::Field then
       desc = d.description_value
+      desc_str  = desc.respond_to?(:call) ? desc.call : desc
       long_opt = d.long_opt
-      args = [d.short_opt, long_opt, desc.respond_to?(:call) ? desc.call : desc].compact
+      args = [d.short_opt, long_opt, desc_str].compact
       case d.type
       when :boolean then
         o.on(*args){d.__parent__.send("#{d.__name__}=", true)}
       else
         long_opt << "=VAL"
         if default_value = d.default_value
-          long_opt << " default: #{default_value.inspect}"
+          desc_str << " default: #{default_value.inspect}"
         end
         o.on(*args){|val| d.__parent__.send("#{d.__name__}=", val)}
       end

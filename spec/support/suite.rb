@@ -1,6 +1,12 @@
 def build_suite1
   Tengine::Support::Config.suite do
-    field(:action, "test|load|start|enable|stop|force-stop|status|activate", :type => :string)
+    banner <<EOS
+Usage: config_test [-k action] [-f path_to_config]
+         [-H db_host] [-P db_port] [-U db_user] [-S db_pass] [-B db_database]
+
+EOS
+
+    field(:action, "test|load|start|enable|stop|force-stop|status|activate", :type => :string, :default => "start")
     field(:config, "path/to/config_file", :type => :string)
     add(:process, App1::ProcessConfig)
     add(:db, Tengine::Support::Config::Mongoid::Connection, :defaults => {:database => "tengine_production"})
@@ -24,6 +30,10 @@ def build_suite1
     add(:process_stderr_log, App1::LoggerConfig,
       :logger_name => "#{File.basename($PROGRAM_NAME)}_stderr",
       :dependencies => { :process_config => :process, :log_common => :log_common,})
+    group(:general) do
+      action(:version, "show version"){ STDOUT.puts "1.1.1"; exit }
+      action(:help   , "show this help message"){ STDOUT.puts option_parser.help; exit }
+    end
     mapping({
         [:action] => :k,
         [:process, :daemon] => :D,

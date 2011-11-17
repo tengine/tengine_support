@@ -77,9 +77,26 @@ module Tengine::Support::Config::Definition::HasManyChildren
     end
   end
 
+  def actions
+    @actions ||= []
+  end
+
+  def action(__name__, *args, &block)
+    attrs = args.last.is_a?(Hash) ? args.pop : {}
+    attrs[:description] = args.first unless args.empty?
+    attrs[:__name__] = __name__
+    attrs[:__parent__] = self
+    attrs[:__block__] = block
+    field = Tengine::Support::Config::Definition::Field.new(attrs)
+    self.actions << field
+  end
+
   def to_hash
     children.inject({}) do |dest, child|
-      dest[child.__name__] = child.to_hash
+      value = child.to_hash
+      unless value.is_a?(Hash) && value.empty?
+        dest[child.__name__] = child.to_hash
+      end
       dest
     end
   end

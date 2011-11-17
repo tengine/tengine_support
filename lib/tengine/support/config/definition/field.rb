@@ -1,7 +1,7 @@
 require 'tengine/support/config/definition'
 
 class Tengine::Support::Config::Definition::Field
-  attr_accessor :__name__, :__parent__
+  attr_accessor :__name__, :__parent__, :__block__
   attr_accessor :type, :default_description, :default, :description
   def initialize(attrs = {})
     attrs.each{|k, v| send("#{k}=", v)}
@@ -15,7 +15,7 @@ class Tengine::Support::Config::Definition::Field
     [
       __parent__.get_value(description),
       __parent__.get_value(default_description)
-    ].to_s
+    ].join(' ')
   end
 
   def default_value
