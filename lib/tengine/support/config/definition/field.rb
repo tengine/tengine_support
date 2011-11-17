@@ -1,19 +1,15 @@
 require 'tengine/support/config/definition'
 
 class Tengine::Support::Config::Definition::Field
-  attr_accessor :__name__, :__parent__, :__block__, :__separator__
+  attr_accessor :__name__, :__parent__, :__block__, :__type__
   attr_accessor :type, :default_description, :default, :description
   def initialize(attrs = {})
     attrs.each{|k, v| send("#{k}=", v)}
   end
 
-  def action?
-    !!__block__
-  end
-
-  def separator?
-    __separator__
-  end
+  def field?; @__type__ == :field; end
+  def action?; @__type__ == :action; end
+  def separator?; @__type__ == :separator; end
 
   def update(attrs)
     attrs.each{|k, v| send("#{k}=", v)}
@@ -54,6 +50,5 @@ class Tengine::Support::Config::Definition::Field
   def long_opt
     '--' << name_array.join('-').gsub(%r{_}, '-')
   end
-
 
 end

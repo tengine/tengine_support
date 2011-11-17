@@ -57,11 +57,15 @@ module Tengine::Support::Config::Definition::HasManyChildren
     result
   end
 
-  def field(__name__, *args)
+  def field(__name__, *args, &block)
     attrs = args.last.is_a?(Hash) ? args.pop : {}
     attrs[:description] = args.first unless args.empty?
-    attrs[:__name__] = __name__
-    attrs[:__parent__] = self
+    attrs.update({
+        :__name__ => __name__,
+        :__parent__ => self,
+        :__block__ => block,
+        :__type__ => :field,
+      })
     if field = children.detect{|child| child.__name__ == __name__}
       new_field = field.dup
       new_field.update(attrs)
@@ -79,10 +83,13 @@ module Tengine::Support::Config::Definition::HasManyChildren
 
   def action(__name__, *args, &block)
     attrs = args.last.is_a?(Hash) ? args.pop : {}
+    attrs.update({
+        :__name__ => __name__,
+        :__parent__ => self,
+        :__block__ => block,
+        :__type__ => :action,
+      })
     attrs[:description] = args.first unless args.empty?
-    attrs[:__name__] = __name__
-    attrs[:__parent__] = self
-    attrs[:__block__] = block
     field = Tengine::Support::Config::Definition::Field.new(attrs)
     self.children << field
   end
@@ -95,7 +102,7 @@ module Tengine::Support::Config::Definition::HasManyChildren
       :description => description,
       :__name__ => :"separator#{children.count + 1}",
       :__parent__ => self,
-      :__separator__ => true,
+      :__type__ => :separator,
     }
     field = Tengine::Support::Config::Definition::Field.new(attrs)
     self.children << field

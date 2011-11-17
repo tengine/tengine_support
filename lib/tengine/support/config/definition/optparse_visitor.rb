@@ -33,19 +33,20 @@ class Tengine::Support::Config::Definition::OptparseVisitor
       desc_str  = desc.respond_to?(:call) ? desc.call : desc
       long_opt = d.long_opt
       args = [d.short_opt, long_opt, desc_str].compact
-      case d.type
-      when :boolean then
-        o.on(*args){d.__parent__.send("#{d.__name__}=", true)}
+      case d.__type__
+      when :action then
+        obj = eval("self", d.__block__.binding)
+        (class << obj; self; end).module_eval do
+          attr_accessor :option_parser
+        end
+        obj.option_parser = option_parser
+        o.on(*args, &d.__block__)
+      when :separator then
+        o.separator(d.description)
       else
-        if d.action?
-          obj = eval("self", d.__block__.binding)
-          (class << obj; self; end).module_eval do
-            attr_accessor :option_parser
-          end
-          obj.option_parser = option_parser
-          o.on(*args, &d.__block__)
-        elsif d.separator?
-          o.separator(d.description)
+        case d.type
+        when :boolean then
+          o.on(*args){d.__parent__.send("#{d.__name__}=", true)}
         else
           long_opt << "=VAL"
           if default_value = d.default_value
@@ -54,7 +55,6 @@ class Tengine::Support::Config::Definition::OptparseVisitor
           o.on(*args){|val| d.__parent__.send("#{d.__name__}=", val)}
         end
       end
-
     else
       raise "Unsupported definition class #{d.class.name}"
     end
