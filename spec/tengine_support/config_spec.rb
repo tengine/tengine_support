@@ -1,34 +1,6 @@
 # -*- coding: utf-8 -*-
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-module App1
-  class ProcessConfig
-    include Tengine::Support::Config::Definition
-    field :daemon, "process works on background.", :type => :boolean
-    field :pid_dir, "path/to/dir for PID created.", :type => :directory
-  end
-
-  class LoggerConfig < Tengine::Support::Config::Logger
-    parameter :logger_name
-    depends :process_config
-    depends :log_common
-    field :output,
-      :default => proc{
-        process_config.daemon ?
-        "./log/#{logger_name}.log" : "STDOUT" },
-      :default_description => lambda{"if daemon process then \"./log/#{logger_name}.log\" else \"STDOUT\""}
-    field :rotation,
-      :default => proc{ log_common.rotation },
-      :default_description => lambda{"value of #{log_common.long}-rotation"}
-    field :rotation_size,
-      :default => proc{ log_common.rotation_size },
-      :default_description => lambda{"value of #{log_common.long}-rotation-size"}
-    field :level,
-      :default => proc{ log_common.level },
-      :default_description => lambda{"value of #{log_common.long}-level"}
-  end
-end
-
 describe "config" do
 
   context "app1 setting" do
@@ -53,37 +25,7 @@ describe "config" do
 
     context "dynamic" do
       before(:all) do
-        @suite = Tengine::Support::Config.suite do
-          field(:action, "test|load|start|enable|stop|force-stop|status|activate", :type => :string)
-          field(:config, "path/to/config_file", :type => :string)
-          add(:process, App1::ProcessConfig)
-          add(:db, Tengine::Support::Config::Mongoid::Connection, :defaults => {:database => "tengine_production"})
-          group(:event_queue) do
-            add(:connection, Tengine::Support::Config::Amqp::Connection)
-            add(:exchange  , Tengine::Support::Config::Amqp::Exchange, :defaults => {:name => 'tengine_event_exchange'})
-            add(:queue     , Tengine::Support::Config::Amqp::Queue   , :defaults => {:name => 'tengine_event_queue'})
-          end
-          add(:log_common, Tengine::Support::Config::Logger,
-            :defaults => {
-              :rotation      => 3          ,
-              :rotation_size => 1024 * 1024,
-              :level         => 'info'     ,
-            })
-          add(:application_log, App1::LoggerConfig,
-            :logger_name => "application",
-            :dependencies => { :process_config => :process, :log_common => :log_common,})
-          add(:process_stdout_log, App1::LoggerConfig,
-            :logger_name => "#{File.basename($PROGRAM_NAME)}_stdout",
-            :dependencies => { :process_config => :process, :log_common => :log_common,})
-          add(:process_stderr_log, App1::LoggerConfig,
-            :logger_name => "#{File.basename($PROGRAM_NAME)}_stderr",
-            :dependencies => { :process_config => :process, :log_common => :log_common,})
-          mapping({
-              [:process, :daemon] => :D,
-              [:db, :host] => :O,
-              [:db, :port] => :P,
-            })
-        end
+        @suite = build_suite1
       end
 
       subject do

@@ -103,4 +103,8 @@ module Tengine::Support::Config::Definition
     end
   end
 
+  def load(hash)
+    hash.each{|__name__, value| send("#{__name__}=", value)}
+  end
+
 end

@@ -7,6 +7,7 @@ module Tengine::Support::Config::Definition::HasManyChildren
   end
 
   def child_by_name(__name__)
+    __name__= __name__.to_sym if __name__.respond_to?(:to_sym)
     children.detect{|child| child.__name__ == __name__}
   end
 
@@ -83,6 +84,12 @@ module Tengine::Support::Config::Definition::HasManyChildren
     end
   end
 
-
+  def load(hash)
+    hash.each do |__name__, value|
+      child = child_by_name(__name__)
+      raise "child not found for #{__name__.inspect} on #{__name__}" unless child
+      child.load(value)
+    end
+  end
 
 end
