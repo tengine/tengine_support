@@ -6,7 +6,7 @@ require 'tengine/support/yaml_with_erb'
 describe "config" do
   shared_examples_for "load_spec_01.yml's data common" do
     describe "accessors" do
-      it { subject.action.should == nil}
+      it { subject.action.should == "start"}
       it { subject.config.should == nil}
       it { subject.process.should be_a(App1::ProcessConfig) }
       it { subject.process.daemon.should == true}
@@ -37,7 +37,7 @@ describe "config" do
     end
 
     describe "like Hash" do
-      it { subject[:action].should == nil}
+      it { subject[:action].should == "start"}
       it { subject[:config].should == nil}
       it { subject[:process].should be_a(App1::ProcessConfig) }
       it { subject[:process][:daemon].should == true}
@@ -91,6 +91,20 @@ describe "config" do
     end
   end
 
+  shared_examples_for "load_spec_01.yml's data with db Hash" do
+    describe "accessors" do
+      it do
+        subject.db.should == {
+          'host'=> "localhost",
+          'port' => 27020,
+          'username' => nil,
+          'password' => nil,
+          'database' => "tengine_production"
+        }
+      end
+    end
+  end
+
   context "app1 setting" do
     describe :load do
       before(:all) do
@@ -119,7 +133,7 @@ describe "config" do
       end
       subject{ @suite }
       it_should_behave_like "load_spec_01.yml's data common"
-      it_should_behave_like "load_spec_01.yml's data with db config"
+      it_should_behave_like "load_spec_01.yml's data with db Hash"
     end
 
     describe :load_file_by_suite3_with_filepath do
@@ -128,7 +142,7 @@ describe "config" do
       end
       subject{ @suite }
       it_should_behave_like "load_spec_01.yml's data common"
-      it_should_behave_like "load_spec_01.yml's data with db config"
+      it_should_behave_like "load_spec_01.yml's data with db Hash"
     end
 
     describe :load_file_by_suite3_with_hash do
@@ -137,7 +151,7 @@ describe "config" do
       end
       subject{ @suite }
       it_should_behave_like "load_spec_01.yml's data common"
-      it_should_behave_like "load_spec_01.yml's data with db config"
+      it_should_behave_like "load_spec_01.yml's data with db Hash"
     end
 
 

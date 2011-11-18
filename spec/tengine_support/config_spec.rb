@@ -33,7 +33,7 @@ describe "config" do
       end
 
       describe "accessors" do
-        it { subject.action.should == nil}
+        it { subject.action.should == "start"}
         it { subject.config.should == nil}
         it { subject.process.should be_a(App1::ProcessConfig) }
         it { subject.process.daemon.should == nil}

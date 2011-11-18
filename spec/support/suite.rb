@@ -65,7 +65,13 @@ EOS
     field(:action, "test|load|start|enable|stop|force-stop|status|activate", :type => :string, :default => "start")
     load_config(:config, "path/to/config_file", :type => :string)
     add(:process, App1::ProcessConfig)
-    field(:db, "settings to connect to db", :type => :hash)
+    field(:db, "settings to connect to db", :type => :hash, :default => {
+        :host => 'localhost',
+        :port => 27017,
+        :username => nil,
+        :password => nil,
+        :database => 'tengine_production',
+      })
     group(:event_queue, :hidden => true) do
       add(:connection, Tengine::Support::Config::Amqp::Connection)
       add(:exchange  , Tengine::Support::Config::Amqp::Exchange, :defaults => {:name => 'tengine_event_exchange'})
@@ -107,7 +113,7 @@ end
 
 
 
-# build_suite1 との違いは、Tengine::Support::Config::Definition::Suiteを直接newするのではなく
+# build_suite2 との違いは、Tengine::Support::Config::Definition::Suiteを直接newするのではなく
 # 継承したものをnewしている点です。それ以外は変わりません
 def build_suite3(*args)
   ConfigSuite3.new(*args)
@@ -124,7 +130,15 @@ EOS
     field(:action, "test|load|start|enable|stop|force-stop|status|activate", :type => :string, :default => "start")
     load_config(:config, "path/to/config_file", :type => :string)
     add(:process, App1::ProcessConfig)
-    add(:db, Tengine::Support::Config::Mongoid::Connection, :defaults => {:database => "tengine_production"})
+    # field(:db, "settings to connect to db", :type => :hash,
+    #   :default => {:database => "tengine_production"})
+    field(:db, "settings to connect to db", :type => :hash, :default => {
+        :host => 'localhost',
+        :port => 27017,
+        :username => nil,
+        :password => nil,
+        :database => 'tengine_production',
+      })
     group(:event_queue, :hidden => true) do
       add(:connection, Tengine::Support::Config::Amqp::Connection)
       add(:exchange  , Tengine::Support::Config::Amqp::Exchange, :defaults => {:name => 'tengine_event_exchange'})

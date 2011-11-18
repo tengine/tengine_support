@@ -83,7 +83,11 @@ module Tengine::Support::Config::Definition::HasManyChildren
       self.children << field
     end
     (class << self; self; end).module_eval do
-      attr_accessor field.__name__
+      define_method(field.__name__) do
+        instance_variable_get("@#{field.__name__}") || 
+          (field.default.respond_to?(:to_proc) ? self.instance_eval(&field.deault) : field.default)
+      end
+      attr_writer field.__name__
     end
   end
 

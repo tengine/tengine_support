@@ -71,7 +71,6 @@ describe "dump_skelton" do
   end
 
 
-  context :suite2 do
     suite2_skelton = {
       :action => 'start',
       :config => nil,
@@ -79,7 +78,13 @@ describe "dump_skelton" do
         :daemon => nil,
         :pid_dir => nil,
       },
-      :db => nil,
+      :db => {
+        :host => 'localhost',
+        :port => 27017,
+        :username => nil,
+        :password => nil,
+        :database => 'tengine_production',
+      },
       :event_queue => {
         :connection => {
           :host => 'localhost',
@@ -122,14 +127,34 @@ describe "dump_skelton" do
       }.freeze,
     }
 
+
+  context :suite2 do
+    subject{ build_suite2 }
     it do
-      @suite = build_suite2
       STDOUT.should_receive(:puts).with(YAML.dump(suite2_skelton))
       expect{
-        @suite.parse!(%w[--dump-skelton])
+        subject.parse!(%w[--dump-skelton])
       }.to raise_error(SystemExit)
     end
+  end
 
+  context :suite3 do
+    subject{ build_suite3 }
+    it do
+      STDOUT.should_receive(:puts).with(YAML.dump(suite2_skelton))
+      expect{
+        subject.parse!(%w[--dump-skelton])
+      }.to raise_error(SystemExit)
+    end
+    it do
+      subject.db.should == {
+        :host => 'localhost',
+        :port => 27017,
+        :username => nil,
+        :password => nil,
+        :database => 'tengine_production',
+      }
+    end
   end
 
 end

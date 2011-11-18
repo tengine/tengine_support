@@ -42,7 +42,7 @@ describe "config" do
       end
 
       shared_examples_for "load_config_file_by_config_option_on_file" do
-        it { subject.action.should == nil}
+        it { subject.action.should == 'start'}
         it { subject.config.should == nil}
         it { subject.log_common.level.should == "info"}
         it { subject.process_stdout_log.level.should == "warn"}
