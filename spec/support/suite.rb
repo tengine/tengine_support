@@ -29,7 +29,7 @@ EOS
       :parameters => { :logger_name => "application" },
       :dependencies => { :process_config => :process, :log_common => :log_common,}, &hide_about_rotation)
     add(:process_stdout_log, App1::LoggerConfig,
-      :parameters => { :logger_name => "#{File.basename(__FILE__, '.*')}_stdout" },
+      :parameters => { :logger_name => proc{ "#{File.basename(__FILE__, '.*')}_stdout"} },
       :dependencies => { :process_config => :process, :log_common => :log_common,}, &hide_about_rotation)
     add(:process_stderr_log, App1::LoggerConfig,
       :parameters => { :logger_name => "#{File.basename(__FILE__, '.*')}_stderr" },

@@ -37,7 +37,8 @@ module Tengine::Support::Config::Definition::HasManyChildren
     end
 
     (options[:parameters] || {}).each do |param, value|
-      result.send("#{param}=", value)
+      result.send("#{param}=",
+        value.respond_to?(:to_proc) ? result.instance_eval(&value) : value)
     end
 
     defaults = options[:defaults] || {}
