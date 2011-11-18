@@ -184,6 +184,12 @@ describe "config" do
         end
       end
 
+      context "parameters" do
+        it{ subject.application_log.logger_name.should == "application" }
+        it{ subject.process_stdout_log.logger_name.should == "suite_stdout" }
+        it{ subject.process_stderr_log.logger_name.should == "suite_stderr" }
+      end
+
     end
   end
 

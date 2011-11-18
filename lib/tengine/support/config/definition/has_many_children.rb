@@ -26,6 +26,7 @@ module Tengine::Support::Config::Definition::HasManyChildren
     result.__parent__ = self
     result.__name__ = __name__
     result.instantiate_children
+
     dependencies = options[:dependencies] || {}
     klass.definition_reference_names.each do |res_name|
       name_array = dependencies[res_name]
@@ -33,6 +34,10 @@ module Tengine::Support::Config::Definition::HasManyChildren
       obj = root.find(Array(name_array))
       raise "#{name_array.inspect} not found" unless obj
       result.send("#{res_name}=", obj)
+    end
+
+    (options[:parameters] || {}).each do |param, value|
+      result.send("#{param}=", value)
     end
 
     defaults = options[:defaults] || {}

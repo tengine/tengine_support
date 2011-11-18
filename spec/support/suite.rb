@@ -26,13 +26,13 @@ EOS
         :level         => 'info'     ,
       }, &hide_about_rotation)
     add(:application_log, App1::LoggerConfig,
-      :logger_name => "application",
+      :parameters => { :logger_name => "application" },
       :dependencies => { :process_config => :process, :log_common => :log_common,}, &hide_about_rotation)
     add(:process_stdout_log, App1::LoggerConfig,
-      :logger_name => "#{File.basename($PROGRAM_NAME)}_stdout",
+      :parameters => { :logger_name => "#{File.basename(__FILE__, '.*')}_stdout" },
       :dependencies => { :process_config => :process, :log_common => :log_common,}, &hide_about_rotation)
     add(:process_stderr_log, App1::LoggerConfig,
-      :logger_name => "#{File.basename($PROGRAM_NAME)}_stderr",
+      :parameters => { :logger_name => "#{File.basename(__FILE__, '.*')}_stderr" },
       :dependencies => { :process_config => :process, :log_common => :log_common,}, &hide_about_rotation)
     separator("\nGeneral:")
     __action__(:version, "show version"){ STDOUT.puts "1.1.1"; exit }
