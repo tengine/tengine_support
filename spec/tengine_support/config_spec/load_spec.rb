@@ -4,19 +4,13 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 require 'tengine/support/yaml_with_erb'
 
 describe "config" do
-  shared_examples_for "load_spec_01.yml's data" do
+  shared_examples_for "load_spec_01.yml's data common" do
     describe "accessors" do
       it { subject.action.should == nil}
       it { subject.config.should == nil}
       it { subject.process.should be_a(App1::ProcessConfig) }
       it { subject.process.daemon.should == true}
       it { subject.process.pid_dir.should == "./tmp/pids"}
-      it { subject.db.should be_a(Tengine::Support::Config::Mongoid::Connection) }
-      it { subject.db.host.should == "localhost"}
-      it { subject.db.port.should == 27020}
-      it { subject.db.username.should == nil}
-      it { subject.db.password.should == nil}
-      it { subject.db.database.should == "tengine_production"}
       it { subject.event_queue.connection.host.should == "rabbitmq1"}
       it { subject.event_queue.connection.port.should == 5672}
       it { subject.event_queue.exchange.name.should == "tengine_event_exchange"}
@@ -43,6 +37,17 @@ describe "config" do
     end
   end
 
+  shared_examples_for "load_spec_01.yml's data with db config" do
+    describe "accessors" do
+      it { subject.db.should be_a(Tengine::Support::Config::Mongoid::Connection) }
+      it { subject.db.host.should == "localhost"}
+      it { subject.db.port.should == 27020}
+      it { subject.db.username.should == nil}
+      it { subject.db.password.should == nil}
+      it { subject.db.database.should == "tengine_production"}
+    end
+  end
+
   context "app1 setting" do
     describe :load do
       before(:all) do
@@ -50,7 +55,8 @@ describe "config" do
         @suite.load(YAML.load_file(File.expand_path('load_spec_01.yml.erb', File.dirname(__FILE__))))
       end
       subject{ @suite }
-      it_should_behave_like "load_spec_01.yml's data"
+      it_should_behave_like "load_spec_01.yml's data common"
+      it_should_behave_like "load_spec_01.yml's data with db config"
     end
 
     describe :load_file do
@@ -59,8 +65,42 @@ describe "config" do
         @suite.load_file(File.expand_path('load_spec_01.yml.erb', File.dirname(__FILE__)))
       end
       subject{ @suite }
-      it_should_behave_like "load_spec_01.yml's data"
+      it_should_behave_like "load_spec_01.yml's data common"
+      it_should_behave_like "load_spec_01.yml's data with db config"
+     end
+  end
+
+  context "hash for db settings" do
+    describe :load do
+      before(:all) do
+        @suite = build_suite2
+        @suite.load(YAML.load_file(File.expand_path('load_spec_02.yml.erb', File.dirname(__FILE__))))
+      end
+      subject{ @suite }
+      it_should_behave_like "load_spec_01.yml's data common"
+      it "should has a hash for db settings" do
+        subject.db.should == {
+          'hosts' => [['tgndb001', 27017], ['tgndb002', 27017], ['tgndb003', 27017]],
+          'host' => 'localhost',
+          'port' => 27017,
+          'username' => nil,
+          'password' => nil,
+          'database' => 'tengine_production',
+          'read_secondary' => false,
+          'max_retries_on_connection_failure' => 3
+        }
+      end
     end
+
+    describe :load_file do
+      before(:all) do
+        @suite = build_suite1
+        @suite.load_file(File.expand_path('load_spec_01.yml.erb', File.dirname(__FILE__)))
+      end
+      subject{ @suite }
+      it_should_behave_like "load_spec_01.yml's data common"
+      it_should_behave_like "load_spec_01.yml's data with db config"
+     end
   end
 
 end

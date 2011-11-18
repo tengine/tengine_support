@@ -133,7 +133,11 @@ module Tengine::Support::Config::Definition::HasManyChildren
     hash.each do |__name__, value|
       child = child_by_name(__name__)
       raise "child not found for #{__name__.inspect} on #{__name__}" unless child
-      child.load(value)
+      if child.is_a?(Tengine::Support::Config::Definition::Field)
+        self.send("#{__name__}=", value)
+      else
+        child.load(value)
+      end
     end
   end
 
