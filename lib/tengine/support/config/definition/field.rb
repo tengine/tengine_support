@@ -29,7 +29,7 @@ class Tengine::Support::Config::Definition::Field
   end
 
   def to_hash
-    default_value
+    __parent__.send(__name__) || default_value
   end
 
   def accept_visitor(visitor)

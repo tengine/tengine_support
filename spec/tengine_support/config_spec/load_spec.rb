@@ -66,8 +66,19 @@ describe "config" do
       it { subject[:process_stderr_log][:rotation_size].should == 1024 * 1024 * 1024}
       it { subject[:process_stderr_log][:level].should == "info"}
     end
-  end
 
+    describe "process to_hash" do
+      it do
+        subject.event_queue.connection.to_hash.should == {
+          :host => "rabbitmq1",
+          :port => 5672,
+          :vhost=>nil,
+          :user=>nil,
+          :pass=>nil,
+        }
+      end
+    end
+  end
 
   shared_examples_for "load_spec_01.yml's data with db config" do
     describe "accessors" do
