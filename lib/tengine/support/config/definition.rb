@@ -153,4 +153,8 @@ module Tengine::Support::Config::Definition
   def action?; false; end
   def separator?; false; end
 
+  def [](child_name)
+    self.send(child_name)
+  end
+
 end

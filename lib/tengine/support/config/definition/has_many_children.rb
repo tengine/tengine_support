@@ -153,4 +153,13 @@ module Tengine::Support::Config::Definition::HasManyChildren
     obj.is_a?(Proc) ? self.instance_eval(&obj) : obj
   end
 
+  def [](child_name)
+    child = child_by_name(child_name)
+    if child.is_a?(Tengine::Support::Config::Definition::Field)
+      self.send(child_name)
+    else
+      child
+    end
+  end
+
 end

@@ -35,7 +35,39 @@ describe "config" do
       it { subject.process_stderr_log.rotation_size.should == 1024 * 1024 * 1024}
       it { subject.process_stderr_log.level.should == "info"}
     end
+
+    describe "like Hash" do
+      it { subject[:action].should == nil}
+      it { subject[:config].should == nil}
+      it { subject[:process].should be_a(App1::ProcessConfig) }
+      it { subject[:process][:daemon].should == true}
+      it { subject[:process][:pid_dir].should == "./tmp/pids"}
+      it { subject[:event_queue][:connection][:host].should == "rabbitmq1"}
+      it { subject[:event_queue][:connection][:port].should == 5672}
+      it { subject[:event_queue][:exchange][:name].should == "tengine_event_exchange"}
+      it { subject[:event_queue][:exchange][:type].should == 'direct'}
+      it { subject[:event_queue][:exchange][:durable].should == true}
+      it { subject[:event_queue][:queue][:name].should == "tengine_event_queue"}
+      it { subject[:event_queue][:queue][:durable].should == true}
+      it { subject[:log_common][:output].should == nil}
+      it { subject[:log_common][:rotation].should == 5}
+      it { subject[:log_common][:rotation_size].should == 1024 * 1024 * 1024}
+      it { subject[:log_common][:level].should == "info"}
+      it { subject[:application_log][:output].should == "log/application.log"}
+      it { subject[:application_log][:rotation].should == 'daily'}
+      it { subject[:application_log][:rotation_size].should == 1024 * 1024 * 1024}
+      it { subject[:application_log][:level].should == "debug"}
+      it { subject[:process_stdout_log][:output].should == "log/stdout.log"}
+      it { subject[:process_stdout_log][:rotation].should == 5}
+      it { subject[:process_stdout_log][:rotation_size].should == 1024 * 1024 * 1024}
+      it { subject[:process_stdout_log][:level].should == "warn"}
+      it { subject[:process_stderr_log][:output].should == "log/stderr.log"}
+      it { subject[:process_stderr_log][:rotation].should == 5}
+      it { subject[:process_stderr_log][:rotation_size].should == 1024 * 1024 * 1024}
+      it { subject[:process_stderr_log][:level].should == "info"}
+    end
   end
+
 
   shared_examples_for "load_spec_01.yml's data with db config" do
     describe "accessors" do
