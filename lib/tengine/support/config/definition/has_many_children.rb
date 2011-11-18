@@ -43,8 +43,8 @@ module Tengine::Support::Config::Definition::HasManyChildren
     end
 
     children << result
-    result.instance_eval(&block) if block
     (class << self; self; end).class_eval{ define_method(__name__){ result } }
+    result.instance_eval(&block) if block
     result
   end
 

@@ -16,21 +16,24 @@ EOS
       add(:exchange  , Tengine::Support::Config::Amqp::Exchange, :defaults => {:name => 'tengine_event_exchange'})
       add(:queue     , Tengine::Support::Config::Amqp::Queue   , :defaults => {:name => 'tengine_event_queue'})
     end
+    hide_about_rotation = proc do
+      find(:rotation).hidden = true; find(:rotation_size).hidden = true
+    end
     add(:log_common, Tengine::Support::Config::Logger,
       :defaults => {
         :rotation      => 3          ,
         :rotation_size => 1024 * 1024,
         :level         => 'info'     ,
-      })
+      }, &hide_about_rotation)
     add(:application_log, App1::LoggerConfig,
       :logger_name => "application",
-      :dependencies => { :process_config => :process, :log_common => :log_common,})
+      :dependencies => { :process_config => :process, :log_common => :log_common,}, &hide_about_rotation)
     add(:process_stdout_log, App1::LoggerConfig,
       :logger_name => "#{File.basename($PROGRAM_NAME)}_stdout",
-      :dependencies => { :process_config => :process, :log_common => :log_common,})
+      :dependencies => { :process_config => :process, :log_common => :log_common,}, &hide_about_rotation)
     add(:process_stderr_log, App1::LoggerConfig,
       :logger_name => "#{File.basename($PROGRAM_NAME)}_stderr",
-      :dependencies => { :process_config => :process, :log_common => :log_common,})
+      :dependencies => { :process_config => :process, :log_common => :log_common,}, &hide_about_rotation)
     separator("\nGeneral:")
     __action__(:version, "show version"){ STDOUT.puts "1.1.1"; exit }
     __action__(:dump_skelton, "dump skelton of config"){ STDOUT.puts YAML.dump(root.to_hash); exit }

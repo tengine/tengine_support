@@ -92,36 +92,21 @@ db:
 
 log_common:
         --log-common-output=VAL      file path or "STDOUT" / "STDERR". 
-        --log-common-rotation=VAL    rotation file count or daily,weekly,monthly.  default: 3
-        --log-common-rotation-size=VAL
-                                     number of max log file size.  default: 1048576
         --log-common-level=VAL       debug/info/warn/error/fatal.  default: "info"
 
 application_log:
         --application-log-output=VAL file path or "STDOUT" / "STDERR". if daemon process then "./log/.log" else "STDOUT" default: "STDOUT"
-        --application-log-rotation=VAL
-                                     rotation file count or daily,weekly,monthly. value of --log-common-rotation default: 3
-        --application-log-rotation-size=VAL
-                                     number of max log file size. value of --log-common-rotation-size default: 1048576
         --application-log-level=VAL  debug/info/warn/error/fatal. value of --log-common-level default: "info"
 
 process_stdout_log:
         --process-stdout-log-output=VAL
                                      file path or "STDOUT" / "STDERR". if daemon process then "./log/.log" else "STDOUT" default: "STDOUT"
-        --process-stdout-log-rotation=VAL
-                                     rotation file count or daily,weekly,monthly. value of --log-common-rotation default: 3
-        --process-stdout-log-rotation-size=VAL
-                                     number of max log file size. value of --log-common-rotation-size default: 1048576
         --process-stdout-log-level=VAL
                                      debug/info/warn/error/fatal. value of --log-common-level default: "info"
 
 process_stderr_log:
         --process-stderr-log-output=VAL
                                      file path or "STDOUT" / "STDERR". if daemon process then "./log/.log" else "STDOUT" default: "STDOUT"
-        --process-stderr-log-rotation=VAL
-                                     rotation file count or daily,weekly,monthly. value of --log-common-rotation default: 3
-        --process-stderr-log-rotation-size=VAL
-                                     number of max log file size. value of --log-common-rotation-size default: 1048576
         --process-stderr-log-level=VAL
                                      debug/info/warn/error/fatal. value of --log-common-level default: "info"
 

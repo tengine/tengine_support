@@ -104,6 +104,16 @@ module Tengine::Support::Config::Definition
     (children || []).detect{|child| child.__name__ == __name__}
   end
 
+  def find(name_array)
+    name_array = Array(name_array)
+    head = name_array.shift
+    if child = child_by_name(head)
+      name_array.empty? ? child : child.find(name_array)
+    else
+      nil
+    end
+  end
+
   def to_hash
     children.inject({}) do |dest, child|
       dest[child.__name__] = child.to_hash
