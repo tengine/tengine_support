@@ -12,7 +12,7 @@ describe 'Tengine::Support::Config::Logger' do
       it { subject.should be_a(Tengine::Support::Config::Definition::Field)}
       its(:type){ should == :string }
       its(:__name__){ should == :output }
-      its(:description){ should == 'file path or "STDOUT" / "STDERR".'}
+      its(:description){ should == 'file path or "STDOUT" / "STDERR" / "NULL".'}
       its(:default){ should == nil}
     end
   end
@@ -45,6 +45,16 @@ describe 'Tengine::Support::Config::Logger' do
       Logger.should_receive(:new).with(STDERR, nil, nil).and_return(logger)
       logger.should_receive(:level=).with(Logger::WARN)
       config.new_logger.should == logger
+    end
+
+    it "NULLの場合" do
+      config = Tengine::Support::Config::Logger.new
+      config.output = "NULL"
+      config.level = "warn"
+      config.rotation = nil
+      config.rotation_size = nil
+      Tengine::Support::NullLogger.should_receive(:new).and_return(:logger)
+      config.new_logger.should == :logger
     end
 
     context "ファイル名の場合" do

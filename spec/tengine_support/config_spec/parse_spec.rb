@@ -91,22 +91,22 @@ db:
         --db-database=VAL            database name to connect db.  default: "tengine_production"
 
 log_common:
-        --log-common-output=VAL      file path or "STDOUT" / "STDERR". 
+        --log-common-output=VAL      file path or "STDOUT" / "STDERR" / "NULL". 
         --log-common-level=VAL       debug/info/warn/error/fatal.  default: "info"
 
 application_log:
-        --application-log-output=VAL file path or "STDOUT" / "STDERR". if daemon process then "./log/.log" else "STDOUT" default: "STDOUT"
+        --application-log-output=VAL file path or "STDOUT" / "STDERR" / "NULL". if daemon process then "./log/.log" else "STDOUT" default: "STDOUT"
         --application-log-level=VAL  debug/info/warn/error/fatal. value of --log-common-level default: "info"
 
 process_stdout_log:
         --process-stdout-log-output=VAL
-                                     file path or "STDOUT" / "STDERR". if daemon process then "./log/.log" else "STDOUT" default: "STDOUT"
+                                     file path or "STDOUT" / "STDERR" / "NULL". if daemon process then "./log/.log" else "STDOUT" default: "STDOUT"
         --process-stdout-log-level=VAL
                                      debug/info/warn/error/fatal. value of --log-common-level default: "info"
 
 process_stderr_log:
         --process-stderr-log-output=VAL
-                                     file path or "STDOUT" / "STDERR". if daemon process then "./log/.log" else "STDOUT" default: "STDOUT"
+                                     file path or "STDOUT" / "STDERR" / "NULL". if daemon process then "./log/.log" else "STDOUT" default: "STDOUT"
         --process-stderr-log-level=VAL
                                      debug/info/warn/error/fatal. value of --log-common-level default: "info"
 
