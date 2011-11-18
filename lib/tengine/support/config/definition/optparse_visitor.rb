@@ -14,6 +14,7 @@ class Tengine::Support::Config::Definition::OptparseVisitor
   alias_method :o, :option_parser
 
   def visit(d)
+    return if d.respond_to?(:hidden?) && d.hidden?
     case d
     when Tengine::Support::Config::Definition::Suite then
       option_parser.banner = d.banner

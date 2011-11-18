@@ -15,4 +15,8 @@ class Tengine::Support::Config::Definition::Group
     __parent__.root
   end
 
+  def hidden?
+    !!@options[:hidden]
+  end
+
 end

@@ -2,7 +2,7 @@ require 'tengine/support/config/definition'
 
 class Tengine::Support::Config::Definition::Field
   attr_accessor :__name__, :__parent__, :__block__, :__type__
-  attr_accessor :type, :default_description, :default, :description
+  attr_accessor :type, :default_description, :default, :description, :hidden
   def initialize(attrs = {})
     attrs.each{|k, v| send("#{k}=", v)}
   end
@@ -10,6 +10,8 @@ class Tengine::Support::Config::Definition::Field
   def field?; @__type__ == :field; end
   def action?; @__type__ == :action; end
   def separator?; @__type__ == :separator; end
+
+  def hidden?; !!self.hidden; end
 
   def update(attrs)
     attrs.each{|k, v| send("#{k}=", v)}

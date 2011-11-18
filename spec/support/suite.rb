@@ -11,7 +11,7 @@ EOS
     load_config(:config, "path/to/config_file", :type => :string)
     add(:process, App1::ProcessConfig)
     add(:db, Tengine::Support::Config::Mongoid::Connection, :defaults => {:database => "tengine_production"})
-    group(:event_queue) do
+    group(:event_queue, :hidden => true) do
       add(:connection, Tengine::Support::Config::Amqp::Connection)
       add(:exchange  , Tengine::Support::Config::Amqp::Exchange, :defaults => {:name => 'tengine_event_exchange'})
       add(:queue     , Tengine::Support::Config::Amqp::Queue   , :defaults => {:name => 'tengine_event_queue'})
@@ -63,7 +63,7 @@ EOS
     load_config(:config, "path/to/config_file", :type => :string)
     add(:process, App1::ProcessConfig)
     field(:db, "settings to connect to db", :type => :hash)
-    group(:event_queue) do
+    group(:event_queue, :hidden => true) do
       add(:connection, Tengine::Support::Config::Amqp::Connection)
       add(:exchange  , Tengine::Support::Config::Amqp::Exchange, :defaults => {:name => 'tengine_event_exchange'})
       add(:queue     , Tengine::Support::Config::Amqp::Queue   , :defaults => {:name => 'tengine_event_queue'})
