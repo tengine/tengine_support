@@ -151,5 +151,6 @@ process_stderr_log:
 
 General:
         --version                    show version 
+        --dump-skelton               dump skelton of config 
         --help                       show this help message 
 END_OF_HELP

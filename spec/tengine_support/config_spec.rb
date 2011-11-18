@@ -123,7 +123,7 @@ describe "config" do
         subject.children.map(&:__name__).should == [
           :action, :config,
           :process, :db, :event_queue, :log_common,
-          :application_log, :process_stdout_log, :process_stderr_log, :separator10, :version, :help]
+          :application_log, :process_stdout_log, :process_stderr_log, :separator10, :version, :dump_skelton, :help]
       end
 
       context "suite returns child by name" do

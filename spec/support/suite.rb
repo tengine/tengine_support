@@ -33,6 +33,7 @@ EOS
       :dependencies => { :process_config => :process, :log_common => :log_common,})
     separator("\nGeneral:")
     __action__(:version, "show version"){ STDOUT.puts "1.1.1"; exit }
+    __action__(:dump_skelton, "dump skelton of config"){ STDOUT.puts YAML.dump(root.to_hash); exit }
     __action__(:help   , "show this help message"){ STDOUT.puts option_parser.help; exit }
 
     mapping({
@@ -84,6 +85,7 @@ EOS
       :dependencies => { :process_config => :process, :log_common => :log_common,})
     separator("\nGeneral:")
     __action__(:version, "show version"){ STDOUT.puts "1.1.1"; exit }
+    __action__(:dump_skelton, "dump skelton of config"){ STDOUT.puts YAML.dump(root.to_hash); exit }
     __action__(:help   , "show this help message"){ STDOUT.puts option_parser.help; exit }
 
     mapping({
