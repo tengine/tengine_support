@@ -101,6 +101,34 @@ describe "config" do
       it_should_behave_like "load_spec_01.yml's data with db config"
     end
 
+    describe :load_file_by_suite3 do
+      before(:all) do
+        @suite = build_suite3
+        @suite.load_file(File.expand_path('load_spec_01.yml.erb', File.dirname(__FILE__)))
+      end
+      subject{ @suite }
+      it_should_behave_like "load_spec_01.yml's data common"
+      it_should_behave_like "load_spec_01.yml's data with db config"
+    end
+
+    describe :load_file_by_suite3_with_filepath do
+      before(:all) do
+        @suite = build_suite3(File.expand_path('load_spec_01.yml.erb', File.dirname(__FILE__)))
+      end
+      subject{ @suite }
+      it_should_behave_like "load_spec_01.yml's data common"
+      it_should_behave_like "load_spec_01.yml's data with db config"
+    end
+
+    describe :load_file_by_suite3_with_hash do
+      before(:all) do
+        @suite = build_suite3(YAML.load_file(File.expand_path('load_spec_01.yml.erb', File.dirname(__FILE__))))
+      end
+      subject{ @suite }
+      it_should_behave_like "load_spec_01.yml's data common"
+      it_should_behave_like "load_spec_01.yml's data with db config"
+    end
+
 
     context "set like a Hash" do
       before do

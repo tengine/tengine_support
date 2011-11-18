@@ -6,6 +6,15 @@ require 'tengine/support/yaml_with_erb'
 class Tengine::Support::Config::Definition::Suite
   include Tengine::Support::Config::Definition::HasManyChildren
 
+  def initialize(hash_or_filepath = nil)
+    build if respond_to?(:build)
+    case hash_or_filepath
+    when Hash then load(hash_or_filepath)
+    when String then load_file(hash_or_filepath)
+    end
+  end
+
+
   def mapping(mapping = nil)
     @mapping = mapping if mapping
     @mapping
