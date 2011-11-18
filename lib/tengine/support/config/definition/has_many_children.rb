@@ -162,4 +162,13 @@ module Tengine::Support::Config::Definition::HasManyChildren
     end
   end
 
+  def []=(child_name, value)
+    child = child_by_name(child_name)
+    if child.is_a?(Tengine::Support::Config::Definition::Field)
+      self.send("#{child_name}=", value)
+    else
+      raise ArgumentError, "can't replace #{child_name.inspect}"
+    end
+  end
+
 end

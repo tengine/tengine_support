@@ -99,7 +99,29 @@ describe "config" do
       subject{ @suite }
       it_should_behave_like "load_spec_01.yml's data common"
       it_should_behave_like "load_spec_01.yml's data with db config"
-     end
+    end
+
+
+    context "set like a Hash" do
+      before do
+        @suite = build_suite1
+        @suite.load_file(File.expand_path('load_spec_01.yml.erb', File.dirname(__FILE__)))
+      end
+
+      describe "#[]=" do
+        it "set value to field" do
+          @suite[:event_queue][:connection][:port] = 2765
+          @suite[:event_queue][:connection][:port].should == 2765
+        end
+
+        it "set value to group" do
+          event_queue = @suite[:event_queue]
+          expect{
+            event_queue[:connection] = :hoge
+          }.to raise_error(ArgumentError, "can't replace :connection")
+        end
+      end
+    end
   end
 
   context "hash for db settings" do

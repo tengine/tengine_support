@@ -157,4 +157,8 @@ module Tengine::Support::Config::Definition
     self.send(child_name)
   end
 
+  def []=(child_name, value)
+    self.send("#{child_name}=", value)
+  end
+
 end
