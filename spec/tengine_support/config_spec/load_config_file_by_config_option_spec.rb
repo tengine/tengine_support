@@ -25,7 +25,7 @@ describe "config" do
         it { subject.event_queue.exchange.durable.should == true}
         it { subject.event_queue.queue.name.should == "tengine_event_queue"}
         it { subject.event_queue.queue.durable.should == true}
-        it { subject.log_common.output.should == nil}
+        it { subject.log_common.output.should == "STDOUT"}
         it { subject.log_common.rotation.should == 5}
         it { subject.log_common.rotation_size.should == 1024 * 1024 * 1024}
         it { subject.application_log.output.should == "log/application.log"}

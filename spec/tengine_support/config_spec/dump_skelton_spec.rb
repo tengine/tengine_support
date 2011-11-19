@@ -39,25 +39,29 @@ describe "dump_skelton" do
       },
 
       :log_common => {
-        :output        => nil        ,
+        :output        => "STDOUT"   ,
         :rotation      => 3          ,
         :rotation_size => 1024 * 1024,
         :level         => 'info'     ,
+        :progname => nil, :datetime_format => nil,
       }.freeze,
 
       :application_log => {
         :output        => "STDOUT",
-        :rotation=>3, :rotation_size=>1048576, :level=>"info"
+        :rotation=>3, :rotation_size=>1048576, :level=>"info",
+        :progname => nil, :datetime_format => nil,
       }.freeze,
 
       :process_stdout_log => {
         :output        => "STDOUT",
-        :rotation=>3, :rotation_size=>1048576, :level=>"info"
+        :rotation=>3, :rotation_size=>1048576, :level=>"info",
+        :progname => nil, :datetime_format => nil,
       }.freeze,
 
       :process_stderr_log => {
         :output        => "STDOUT",
-        :rotation=>3, :rotation_size=>1048576, :level=>"info"
+        :rotation=>3, :rotation_size=>1048576, :level=>"info",
+        :progname => nil, :datetime_format => nil,
       }.freeze,
     }
 
@@ -105,25 +109,29 @@ describe "dump_skelton" do
       },
 
       :log_common => {
-        :output        => nil        ,
+        :output        => "STDOUT"   ,
         :rotation      => 3          ,
         :rotation_size => 1024 * 1024,
         :level         => 'info'     ,
+        :progname => nil, :datetime_format => nil,
       }.freeze,
 
       :application_log => {
         :output        => "STDOUT",
-        :rotation=>3, :rotation_size=>1048576, :level=>"info"
+        :rotation=>3, :rotation_size=>1048576, :level=>"info",
+        :progname => nil, :datetime_format => nil,
       }.freeze,
 
       :process_stdout_log => {
         :output        => "STDOUT",
-        :rotation=>3, :rotation_size=>1048576, :level=>"info"
+        :rotation=>3, :rotation_size=>1048576, :level=>"info",
+        :progname => nil, :datetime_format => nil,
       }.freeze,
 
       :process_stderr_log => {
         :output        => "STDOUT",
-        :rotation=>3, :rotation_size=>1048576, :level=>"info"
+        :rotation=>3, :rotation_size=>1048576, :level=>"info",
+        :progname => nil, :datetime_format => nil,
       }.freeze,
     }
 

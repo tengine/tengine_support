@@ -51,7 +51,7 @@ describe "config" do
         it { subject.event_queue.exchange.durable.should == true}
         it { subject.event_queue.queue.name.should == "tengine_event_queue"}
         it { subject.event_queue.queue.durable.should == true}
-        it { subject.log_common.output.should == nil}
+        it { subject.log_common.output.should == "STDOUT"}
         it { subject.log_common.rotation.should == 3}
         it { subject.log_common.rotation_size.should == 1024 * 1024}
         it { subject.log_common.level.should == "info"}
@@ -96,25 +96,29 @@ describe "config" do
           },
 
           :log_common => {
-            :output        => nil        ,
+            :output        => "STDOUT"   ,
             :rotation      => 3          ,
             :rotation_size => 1024 * 1024,
             :level         => 'info'     ,
+            :progname => nil, :datetime_format => nil,
           }.freeze,
 
           :application_log => {
             :output        => "STDOUT",
-            :rotation=>3, :rotation_size=>1048576, :level=>"info"
+            :rotation=>3, :rotation_size=>1048576, :level=>"info",
+            :progname => nil, :datetime_format => nil,
           }.freeze,
 
           :process_stdout_log => {
             :output        => "STDOUT",
-            :rotation=>3, :rotation_size=>1048576, :level=>"info"
+            :rotation=>3, :rotation_size=>1048576, :level=>"info",
+            :progname => nil, :datetime_format => nil,
           }.freeze,
 
           :process_stderr_log => {
             :output        => "STDOUT",
-            :rotation=>3, :rotation_size=>1048576, :level=>"info"
+            :rotation=>3, :rotation_size=>1048576, :level=>"info",
+            :progname => nil, :datetime_format => nil,
           }.freeze,
         }
       end
