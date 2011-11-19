@@ -130,13 +130,13 @@ describe 'Tengine::Support::Config::Logger' do
           subject.formatter = lambda{|level, t, prog, msg| "#{t.iso8601} #{level} #{prog} #{msg}\n"}
         end
         it "実際に出力してみる" do
-          t = Time.local(2011, 12, 31, 23, 59, 59)
+          t = Time.utc(2011, 12, 31, 23, 59, 59)
           Time.stub!(:now).and_return(t)
           subject.info("something started.")
           subject.error("something happened.")
           File.read(@tempfile.path).should == [
-            "2011-12-31T23:59:59+09:00 INFO foobar something started.\n",
-            "2011-12-31T23:59:59+09:00 ERROR foobar something happened.\n",
+            "2011-12-31T23:59:59Z INFO foobar something started.\n",
+            "2011-12-31T23:59:59Z ERROR foobar something happened.\n",
           ].join
         end
       end
