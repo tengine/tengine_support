@@ -23,7 +23,7 @@ describe "config" do
         it { subject.event_queue.exchange.durable.should == true}
         it { subject.event_queue.queue.name.should == "tengine_event_queue"}
         it { subject.event_queue.queue.durable.should == true}
-        it { subject.log_common.output.should == nil}
+        it { subject.log_common.output.should == "STDOUT"}
         it { subject.log_common.rotation.should == 3}
         it { subject.log_common.rotation_size.should == 1024 * 1024}
         it { subject.log_common.level.should == "debug"}
@@ -91,24 +91,39 @@ db:
         --db-database=VAL            database name to connect db.  default: "tengine_production"
 
 log_common:
-        --log-common-output=VAL      file path or "STDOUT" / "STDERR" / "NULL". 
-        --log-common-level=VAL       debug/info/warn/error/fatal.  default: "info"
+        --log-common-output=VAL      file path or "STDOUT" / "STDERR" / "NULL".  default: "STDOUT"
+        --log-common-level=VAL       Logging severity threshold. debug/info/warn/error/fatal.  default: "info"
+        --log-common-progname=VAL    program name to include in log messages. 
+        --log-common-datetime-format=VAL
+                                     A string suitable for passing to strftime. 
 
 application_log:
         --application-log-output=VAL file path or "STDOUT" / "STDERR" / "NULL". if daemon process then "./log/application.log" else "STDOUT" default: "STDOUT"
-        --application-log-level=VAL  debug/info/warn/error/fatal. value of --log-common-level default: "info"
+        --application-log-level=VAL  Logging severity threshold. debug/info/warn/error/fatal. value of --log-common-level default: "info"
+        --application-log-progname=VAL
+                                     program name to include in log messages. 
+        --application-log-datetime-format=VAL
+                                     A string suitable for passing to strftime. 
 
 process_stdout_log:
         --process-stdout-log-output=VAL
                                      file path or "STDOUT" / "STDERR" / "NULL". if daemon process then "./log/suite_stdout.log" else "STDOUT" default: "STDOUT"
         --process-stdout-log-level=VAL
-                                     debug/info/warn/error/fatal. value of --log-common-level default: "info"
+                                     Logging severity threshold. debug/info/warn/error/fatal. value of --log-common-level default: "info"
+        --process-stdout-log-progname=VAL
+                                     program name to include in log messages. 
+        --process-stdout-log-datetime-format=VAL
+                                     A string suitable for passing to strftime. 
 
 process_stderr_log:
         --process-stderr-log-output=VAL
                                      file path or "STDOUT" / "STDERR" / "NULL". if daemon process then "./log/suite_stderr.log" else "STDOUT" default: "STDOUT"
         --process-stderr-log-level=VAL
-                                     debug/info/warn/error/fatal. value of --log-common-level default: "info"
+                                     Logging severity threshold. debug/info/warn/error/fatal. value of --log-common-level default: "info"
+        --process-stderr-log-progname=VAL
+                                     program name to include in log messages. 
+        --process-stderr-log-datetime-format=VAL
+                                     A string suitable for passing to strftime. 
 
 General:
         --version                    show version 
