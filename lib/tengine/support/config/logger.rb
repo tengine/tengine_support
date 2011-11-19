@@ -1,12 +1,23 @@
+# -*- coding: utf-8 -*-
 require 'tengine/support/config'
 
 class Tengine::Support::Config::Logger
   include Tengine::Support::Config::Definition
 
-  field :output, 'file path or "STDOUT" / "STDERR" / "NULL".', :type => :string
+  field :output, 'file path or "STDOUT" / "STDERR" / "NULL".', :type => :string, :default => "STDOUT"
   field :rotation, 'rotation file count or daily,weekly,monthly.', :type => :string
   field :rotation_size, 'number of max log file size.', :type => :integer
-  field :level, 'debug/info/warn/error/fatal.', :type => :string
+  field :level, 'Logging severity threshold. debug/info/warn/error/fatal.', :type => :string, :default => "info"
+
+  field :progname, 'program name to include in log messages.', :type => :string
+  field :datetime_format, 'A string suitable for passing to strftime.', :type => :string
+
+  # formatterにはprocしか設定できないので特別設定ファイルやコマンドラインオプションで指定することはできません。
+  # もしformatteを指す名前を指定したい場合は、別途定義したfieldをから求めたformatterの値を、
+  # オーバーライドしたnew_loggerで設定するようにしてください。
+  attr_accessor :formatter
+  # field :formatter, 'Logging formatter, as a Proc that will take four arguments and return the formatted message.',
+  #   :type => :proc, :hidden => true
 
   def new_logger
     case output
@@ -16,8 +27,10 @@ class Tengine::Support::Config::Logger
     else dev = output
     end
     shift_age = (rotation =~ /\A\d+\Z/) ? rotation.to_i : rotation
-    result = Logger.new(dev, shift_age, rotation_size)
-    result.level = Logger.const_get(level.upcase)
+    result = ::Logger.new(dev, shift_age, rotation_size)
+    result.level = ::Logger.const_get(level.to_s.upcase)
+    result.datetime_format = self.datetime_format if self.datetime_format
+    result.progname = self.progname if self.progname
     result
   end
 

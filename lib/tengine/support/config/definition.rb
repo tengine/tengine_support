@@ -15,7 +15,6 @@ module Tengine::Support::Config::Definition
       klass.class_eval do
         self.class_attribute :children, :instance_writer => false, :instance_reader => false
         self.children = []
-
         self.class_attribute :definition_reference_names, :instance_writer => false
         self.definition_reference_names = []
       end
@@ -98,6 +97,7 @@ module Tengine::Support::Config::Definition
       child.__parent__ = self
       child
     end
+    self
   end
 
   def child_by_name(__name__)
