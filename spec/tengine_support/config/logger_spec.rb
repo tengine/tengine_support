@@ -97,6 +97,18 @@ describe 'Tengine::Support::Config::Logger' do
       its(:progname){ should == nil}
     end
 
+    context "各属性の設定と引数を指定が両方ある場合" do
+      before{ @tempfile = Tempfile.new("test.log") }
+      after { @tempfile.close }
+      it "引数に指定されたオプションを優先" do
+        mock_logger = Logger.new("/dev/null")
+        Logger.should_receive(:new).with($stdout, nil, nil).and_return(mock_logger)
+        Tengine::Support::Config::Logger.new.tap{|c|
+          c.output = @tempfile.path
+        }.instantiate_children.new_logger(:output => $stdout)
+      end
+    end
+
     context "各属性を設定を指定する場合" do
       before{ @tempfile = Tempfile.new("test.log") }
       after { @tempfile.close }
@@ -143,7 +155,7 @@ describe 'Tengine::Support::Config::Logger' do
     end
 
     it "STDOUTの場合" do
-      config = Tengine::Support::Config::Logger.new
+      config = Tengine::Support::Config::Logger.new.instantiate_children
       config.output = "STDOUT"
       config.level = "warn"
       config.rotation = nil
@@ -159,7 +171,7 @@ describe 'Tengine::Support::Config::Logger' do
     end
 
     it "STDERRの場合" do
-      config = Tengine::Support::Config::Logger.new
+      config = Tengine::Support::Config::Logger.new.instantiate_children
       config.output = "STDERR"
       config.level = "warn"
       config.rotation = nil
@@ -171,7 +183,7 @@ describe 'Tengine::Support::Config::Logger' do
     end
 
     it "NULLの場合" do
-      config = Tengine::Support::Config::Logger.new
+      config = Tengine::Support::Config::Logger.new.instantiate_children
       config.output = "NULL"
       config.level = "warn"
       config.rotation = nil
@@ -191,7 +203,7 @@ describe 'Tengine::Support::Config::Logger' do
 
       %w[daily weekly monthly].each do |shift_age|
         it "shift_age が #{shift_age}" do
-          config = Tengine::Support::Config::Logger.new
+          config = Tengine::Support::Config::Logger.new.instantiate_children
           config.output = @filepath
           config.level = "info"
           config.rotation = shift_age
@@ -204,7 +216,7 @@ describe 'Tengine::Support::Config::Logger' do
       end
 
       it "shift_ageが整数値" do
-        config = Tengine::Support::Config::Logger.new
+        config = Tengine::Support::Config::Logger.new.instantiate_children
         config.output = @filepath
         config.level = "info"
         config.rotation = "3"

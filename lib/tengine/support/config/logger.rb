@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 require 'tengine/support/config'
+require 'active_support/hash_with_indifferent_access'
 
 class Tengine::Support::Config::Logger
   include Tengine::Support::Config::Definition
@@ -19,18 +20,22 @@ class Tengine::Support::Config::Logger
   # field :formatter, 'Logging formatter, as a Proc that will take four arguments and return the formatted message.',
   #   :type => :proc, :hidden => true
 
-  def new_logger
-    case output
+  def new_logger(options = {})
+    options = ActiveSupport::HashWithIndifferentAccess.new(to_hash).update(options || {})
+    case output = options[:output]
     when "NULL" then return Tengine::Support::NullLogger.new
     when "STDOUT" then dev = STDOUT
     when "STDERR" then dev = STDERR
     else dev = output
     end
+    rotation = options[:rotation]
     shift_age = (rotation =~ /\A\d+\Z/) ? rotation.to_i : rotation
-    result = ::Logger.new(dev, shift_age, rotation_size)
-    result.level = ::Logger.const_get(level.to_s.upcase)
-    result.datetime_format = self.datetime_format if self.datetime_format
-    result.progname = self.progname if self.progname
+    result = ::Logger.new(dev, shift_age, options[:rotation_size])
+    result.level = ::Logger.const_get(options[:level].to_s.upcase)
+    dtf = options[:datetime_format]
+    result.datetime_format = dtf if dtf
+    progname = options[:progname]
+    result.progname = progname if progname
     result
   end
 
