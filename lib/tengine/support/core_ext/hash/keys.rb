@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-require 'active_support/core_ext/hash/deep_dup'
-require 'active_support/core_ext/hash/keys'
+require 'tengine/support/core_ext/hash/deep_dup'
 
 class Hash
 
@@ -13,7 +12,11 @@ class Hash
   def deep_stringify_keys!
     stringify_keys! # active_support/core_ext/hash/keysのメソッドをそのまま使う
     values.each do |value|
-      value.deep_stringify_keys! if value.respond_to?(:deep_stringify_keys!)
+      if value.respond_to?(:deep_stringify_keys!)
+        value.deep_stringify_keys!
+      elsif value.respond_to?(:each)
+        value.each{|v| v.deep_stringify_keys! if v.respond_to?(:deep_stringify_keys!)}
+      end
     end
     self
   end
@@ -29,7 +32,11 @@ class Hash
   def deep_symbolize_keys!
     symbolize_keys! # active_support/core_ext/hash/keysのメソッドをそのまま使う
     values.each do |value|
-      value.deep_symbolize_keys! if value.respond_to?(:deep_symbolize_keys!)
+      if value.respond_to?(:deep_symbolize_keys!)
+        value.deep_symbolize_keys!
+      elsif value.respond_to?(:each)
+        value.each{|v| v.deep_symbolize_keys! if v.respond_to?(:deep_symbolize_keys!)}
+      end
     end
     self
   end

@@ -3,20 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../../../spec_helper')
 
 require 'active_support'
 
-# この機能は、activesupport-3.1.0から追加された active_support/core_ext/hash/deep_dup を
-# 使っているので、3.1.0以下ではテストせず、pendingのメッセージを出します
-if ActiveSupport::VERSION::STRING < "3.1.0"
-  describe "tengine/support/core_ext/hash/keys" do
-    pending %W[
-      depends on active_support/core_ext/hash/deep_dup,
-      but activesupport version is #{ActiveSupport::VERSION::STRING}.
-      If you need to use Hash#deep_stringify_keys and Hash#deep_symbolize_keys,
-      install tengine_support with activesupport >= 3.1.0.
-      ].join(' ')
-  end
-else
-  require 'active_support/core_ext/hash/deep_dup'
-  require 'tengine/support/core_ext/hash/keys'
+require 'tengine/support/core_ext/hash/keys'
 
   describe "tengine/support/core_ext/hash/keys" do
 
@@ -30,9 +17,10 @@ else
             "wake" => {}.freeze,
           }.freeze
         }.freeze,
-        'c' => {
-          'baz' => "4"
-        }.freeze
+        'c' => [
+          { 'baz' => "4" }.freeze,
+          { 'blah' => "5" }.freeze,
+        ]
       }.freeze,
 
       :deep_symbolize_keys_result => {
@@ -44,9 +32,10 @@ else
             :wake => {}.freeze,
           }.freeze
         }.freeze,
-        :c => {
-          :baz => "4"
-        }.freeze
+        :c => [
+          { :baz => "4" }.freeze,
+          { :blah => "5" }.freeze,
+        ]
       }.freeze,
 
       :mixed_key_hash => {
@@ -58,9 +47,10 @@ else
             :wake => {}.freeze,
           }.freeze
         }.freeze,
-        :c => {
-          'baz' => "4"
-        }.freeze
+        :c => [
+          { 'baz' => "4" }.freeze,
+          { :blah => "5" }.freeze,
+        ]
       }.freeze
     }
 
@@ -95,4 +85,3 @@ else
     end
 
   end
-end
