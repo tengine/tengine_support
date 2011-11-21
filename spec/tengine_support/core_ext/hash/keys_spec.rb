@@ -3,6 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../../../spec_helper')
 
 require 'active_support'
 
+require 'tengine/support/core_ext/array/deep_dup'
 require 'tengine/support/core_ext/hash/keys'
 
 describe "tengine/support/core_ext/hash/keys" do
