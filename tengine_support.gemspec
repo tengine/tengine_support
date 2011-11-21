@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "tengine_support"
-  s.version = "0.3.12"
+  s.version = "0.3.13"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["saishu", "w-irie", "taigou", "totty", "hiroshinakao", "g-morita", "guemon", "aoetk", "hattori-at-nt", "t-yamada", "y-karashima", "akm"]
-  s.date = "2011-11-19"
+  s.date = "2011-11-21"
   s.description = "tengine_support provides utility classes/modules which is not included in active_support. It doesn't depend on other tengine gems."
   s.email = "tengine@nautilus-technologies.com"
   s.extra_rdoc_files = [
@@ -37,6 +37,9 @@ Gem::Specification.new do |s|
     "lib/tengine/support/config/definition/suite.rb",
     "lib/tengine/support/config/logger.rb",
     "lib/tengine/support/config/mongoid.rb",
+    "lib/tengine/support/core_ext.rb",
+    "lib/tengine/support/core_ext/hash.rb",
+    "lib/tengine/support/core_ext/hash/keys.rb",
     "lib/tengine/support/null_logger.rb",
     "lib/tengine/support/yaml_with_erb.rb",
     "lib/tengine_support.rb",
@@ -53,6 +56,7 @@ Gem::Specification.new do |s|
     "spec/tengine_support/config_spec/load_spec_01.yml.erb",
     "spec/tengine_support/config_spec/load_spec_02.yml.erb",
     "spec/tengine_support/config_spec/parse_spec.rb",
+    "spec/tengine_support/core_ext/hash/keys_spec.rb",
     "spec/tengine_support/null_logger_spec.rb",
     "spec/tengine_support/yaml_with_erb_spec.rb",
     "spec/tengine_support/yaml_with_erb_spec/test1.yml.erb",
@@ -64,7 +68,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/tengine/tengine_support"
   s.licenses = ["MPL/LGPL"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.10"
+  s.rubygems_version = "1.8.11"
   s.summary = "tengine_support provides utility classes/modules which isn't included in active_support."
 
   if s.respond_to? :specification_version then
