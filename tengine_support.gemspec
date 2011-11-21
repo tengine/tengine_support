@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "tengine_support"
-  s.version = "0.3.14"
+  s.version = "0.3.16"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["saishu", "w-irie", "taigou", "totty", "hiroshinakao", "g-morita", "guemon", "aoetk", "hattori-at-nt", "t-yamada", "y-karashima", "akm"]
@@ -38,7 +38,10 @@ Gem::Specification.new do |s|
     "lib/tengine/support/config/logger.rb",
     "lib/tengine/support/config/mongoid.rb",
     "lib/tengine/support/core_ext.rb",
+    "lib/tengine/support/core_ext/array.rb",
+    "lib/tengine/support/core_ext/array/deep_dup.rb",
     "lib/tengine/support/core_ext/hash.rb",
+    "lib/tengine/support/core_ext/hash/deep_dup.rb",
     "lib/tengine/support/core_ext/hash/keys.rb",
     "lib/tengine/support/null_logger.rb",
     "lib/tengine/support/yaml_with_erb.rb",
@@ -56,6 +59,8 @@ Gem::Specification.new do |s|
     "spec/tengine_support/config_spec/load_spec_01.yml.erb",
     "spec/tengine_support/config_spec/load_spec_02.yml.erb",
     "spec/tengine_support/config_spec/parse_spec.rb",
+    "spec/tengine_support/core_ext/array/deep_dup_spec.rb",
+    "spec/tengine_support/core_ext/hash/deep_dup_spec.rb",
     "spec/tengine_support/core_ext/hash/keys_spec.rb",
     "spec/tengine_support/null_logger_spec.rb",
     "spec/tengine_support/yaml_with_erb_spec.rb",
