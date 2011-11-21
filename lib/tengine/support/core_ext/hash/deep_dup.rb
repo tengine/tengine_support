@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 
+# activesupport-3.1.0以上では
 # active_support/core_ext/hash/deep_dupでHash#deep_dupを定義していますが、
 # 対象がHashだけなのでArrayをコピーできません。
 # Arrayや他のオブジェクトに対応するためにメソッドを上書きします。
-require 'active_support/core_ext/hash/deep_dup'
+
+if ActiveSupport::VERSION::STRING >= "3.1.0"
+  require 'active_support/core_ext/hash/deep_dup'
+end
 
 class Hash
   # Returns a deep copy of hash.
