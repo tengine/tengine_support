@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "tengine_support"
-  s.version = "0.3.17"
+  s.version = "0.3.18"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["saishu", "w-irie", "taigou", "totty", "hiroshinakao", "g-morita", "guemon", "aoetk", "hattori-at-nt", "t-yamada", "y-karashima", "akm"]
@@ -57,6 +57,7 @@ Gem::Specification.new do |s|
     "spec/tengine/support/config_spec/load_config_file_by_config_option_spec.rb",
     "spec/tengine/support/config_spec/load_spec.rb",
     "spec/tengine/support/config_spec/load_spec_01.yml.erb",
+    "spec/tengine/support/config_spec/load_spec_01_with_other_settings.yml.erb",
     "spec/tengine/support/config_spec/load_spec_02.yml.erb",
     "spec/tengine/support/config_spec/parse_spec.rb",
     "spec/tengine/support/core_ext/array/deep_dup_spec.rb",
