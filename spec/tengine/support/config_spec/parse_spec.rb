@@ -4,15 +4,15 @@ require File.expand_path(File.dirname(__FILE__) + '/../../../spec_helper')
 describe "config" do
   describe :parse! do
     context "setting1" do
-      shared_examples_for "valid_data1" do
+      shared_examples_for "common_data" do
         it { subject.action.should == 'start'}
         it { subject.config.should == nil}
         it { subject.process.should be_a(App1::ProcessConfig) }
-        it { subject.process.daemon.should == nil}
+        # it { subject.process.daemon.should == nil}
         it { subject.process.pid_dir.should == nil}
         it { subject.db.should be_a(Tengine::Support::Config::Mongoid::Connection) }
         it { subject.db.host.should == "mongo1"}
-        it { subject.db.port.should == 27017}
+        # it { subject.db.port.should == 27017}
         it { subject.db.username.should == 'goku'}
         it { subject.db.password.should == 'ideyoshenlong'}
         it { subject.db.database.should == "tengine_production"}
@@ -27,14 +27,34 @@ describe "config" do
         it { subject.log_common.rotation.should == 3}
         it { subject.log_common.rotation_size.should == 1024 * 1024}
         it { subject.log_common.level.should == "debug"}
-        it { subject.application_log.output.should == "STDOUT"}
+        # it { subject.application_log.output.should == "STDOUT"}
         it { subject.application_log.rotation.should == 3}
         it { subject.application_log.rotation_size.should == 1024 * 1024}
         it { subject.application_log.level.should == "debug"}
-        it { subject.process_stdout_log.output.should == "STDOUT"}
+        # it { subject.process_stdout_log.output.should == "STDOUT"}
         it { subject.process_stdout_log.rotation.should == 3}
         it { subject.process_stdout_log.rotation_size.should == 1024 * 1024}
         it { subject.process_stdout_log.level.should == "info"}
+        # it { subject.process_stderr_log.output.should == "STDOUT"}
+        it { subject.process_stderr_log.rotation.should == 3}
+        it { subject.process_stderr_log.rotation_size.should == 1024 * 1024}
+        it { subject.process_stderr_log.level.should == "debug"}
+      end
+
+      shared_examples_for "data1" do
+        it { subject.db.port.should == 27017}
+        it { subject.process.daemon.should == nil}
+        it { subject.application_log.output.should == "STDOUT"}
+        it { subject.process_stdout_log.output.should == "STDOUT"}
+        it { subject.process_stderr_log.output.should == "STDOUT"}
+      end
+
+      shared_examples_for "data2" do
+        it { subject.db.port.should == 27020}
+        it { subject.process.daemon.should == true}
+        it { subject.application_log.output.should == "./log/application.log"}
+        it { subject.process_stdout_log.output.should == "./log/suite_stdout.log"}
+        it { subject.process_stderr_log.output.should == "./log/suite_stderr.log"}
       end
 
       context "use long option name" do
@@ -43,7 +63,8 @@ describe "config" do
           @suite.parse!(%w[--action=start --db-host=mongo1 --db-username=goku --db-password=ideyoshenlong --log-common-level=debug --process-stdout-log-level=info])
         end
         subject{ @suite }
-        it_should_behave_like "valid_data1"
+        it_should_behave_like "common_data"
+        it_should_behave_like "data1"
       end
 
       context "use short option name" do
@@ -52,7 +73,32 @@ describe "config" do
           @suite.parse!(%w[-k start -O mongo1 -U goku -S ideyoshenlong --log-common-level=debug --process-stdout-log-level=info])
         end
         subject{ @suite }
-        it_should_behave_like "valid_data1"
+        it_should_behave_like "common_data"
+        it_should_behave_like "data1"
+      end
+
+      context "field value specified" do
+        context "long option name" do
+          before(:all) do
+            @suite = build_suite1
+            @suite.parse!(%w[-k start -O mongo1 -U goku -S ideyoshenlong --log-common-level=debug --process-stdout-log-level=info] +
+              %w[--process-daemon --db-port=27020])
+          end
+          subject{ @suite }
+          it_should_behave_like "common_data"
+          it_should_behave_like "data2"
+        end
+
+        context "short options name" do
+          before(:all) do
+            @suite = build_suite1
+            @suite.parse!(%w[-k start -O mongo1 -U goku -S ideyoshenlong --log-common-level=debug --process-stdout-log-level=info] +
+              %w[-D -P 27020])
+          end
+          subject{ @suite }
+          it_should_behave_like "common_data"
+          it_should_behave_like "data2"
+        end
       end
 
       context "show help" do

@@ -59,7 +59,17 @@ module Tengine::Support::Config::Definition
             result
           end
         end
-        attr_writer field_name
+
+        define_method("#{field.__name__}=") do |value|
+          val =
+            case field.type
+            when :boolean then !!value
+            when :integer then value.nil? ? nil : value.to_i
+            when :string then value.nil? ? nil : value.to_s
+            else value
+            end
+          instance_variable_set("@#{field.__name__}", val)
+        end
       end
     end
 

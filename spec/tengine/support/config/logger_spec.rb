@@ -17,7 +17,7 @@ describe 'Tengine::Support::Config::Logger' do
 
     describe Tengine::Support::Config::Logger.rotation do
       it { subject.should be_a(Tengine::Support::Config::Definition::Field)}
-      its(:type){ should == :string }
+      its(:type){ should == nil} # 文字列か整数値なので指定していません
       its(:__name__){ should == :rotation }
       its(:description){ should == 'rotation file count or daily,weekly,monthly.'}
       its(:default){ should == nil}
