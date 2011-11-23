@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "tengine_support"
-  s.version = "0.3.16"
+  s.version = "0.3.17"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["saishu", "w-irie", "taigou", "totty", "hiroshinakao", "g-morita", "guemon", "aoetk", "hattori-at-nt", "t-yamada", "y-karashima", "akm"]
-  s.date = "2011-11-21"
+  s.date = "2011-11-23"
   s.description = "tengine_support provides utility classes/modules which is not included in active_support. It doesn't depend on other tengine gems."
   s.email = "tengine@nautilus-technologies.com"
   s.extra_rdoc_files = [
@@ -49,25 +49,25 @@ Gem::Specification.new do |s|
     "spec/spec_helper.rb",
     "spec/support/app1.rb",
     "spec/support/suite.rb",
-    "spec/tengine_support/config/amqp_spec.rb",
-    "spec/tengine_support/config/logger_spec.rb",
-    "spec/tengine_support/config/mongoid_spec.rb",
-    "spec/tengine_support/config_spec.rb",
-    "spec/tengine_support/config_spec/dump_skelton_spec.rb",
-    "spec/tengine_support/config_spec/load_config_file_by_config_option_spec.rb",
-    "spec/tengine_support/config_spec/load_spec.rb",
-    "spec/tengine_support/config_spec/load_spec_01.yml.erb",
-    "spec/tengine_support/config_spec/load_spec_02.yml.erb",
-    "spec/tengine_support/config_spec/parse_spec.rb",
-    "spec/tengine_support/core_ext/array/deep_dup_spec.rb",
-    "spec/tengine_support/core_ext/hash/deep_dup_spec.rb",
-    "spec/tengine_support/core_ext/hash/keys_spec.rb",
-    "spec/tengine_support/null_logger_spec.rb",
-    "spec/tengine_support/yaml_with_erb_spec.rb",
-    "spec/tengine_support/yaml_with_erb_spec/test1.yml.erb",
-    "spec/tengine_support/yaml_with_erb_spec/test2_with_erb.yml",
-    "spec/tengine_support/yaml_with_erb_spec/test3_without_erb.yml",
-    "spec/tengine_support/yaml_with_erb_spec/test4_with_invalid_erb.yml",
+    "spec/tengine/support/config/amqp_spec.rb",
+    "spec/tengine/support/config/logger_spec.rb",
+    "spec/tengine/support/config/mongoid_spec.rb",
+    "spec/tengine/support/config_spec.rb",
+    "spec/tengine/support/config_spec/dump_skelton_spec.rb",
+    "spec/tengine/support/config_spec/load_config_file_by_config_option_spec.rb",
+    "spec/tengine/support/config_spec/load_spec.rb",
+    "spec/tengine/support/config_spec/load_spec_01.yml.erb",
+    "spec/tengine/support/config_spec/load_spec_02.yml.erb",
+    "spec/tengine/support/config_spec/parse_spec.rb",
+    "spec/tengine/support/core_ext/array/deep_dup_spec.rb",
+    "spec/tengine/support/core_ext/hash/deep_dup_spec.rb",
+    "spec/tengine/support/core_ext/hash/keys_spec.rb",
+    "spec/tengine/support/null_logger_spec.rb",
+    "spec/tengine/support/yaml_with_erb_spec.rb",
+    "spec/tengine/support/yaml_with_erb_spec/test1.yml.erb",
+    "spec/tengine/support/yaml_with_erb_spec/test2_with_erb.yml",
+    "spec/tengine/support/yaml_with_erb_spec/test3_without_erb.yml",
+    "spec/tengine/support/yaml_with_erb_spec/test4_with_invalid_erb.yml",
     "tengine_support.gemspec"
   ]
   s.homepage = "http://github.com/tengine/tengine_support"
