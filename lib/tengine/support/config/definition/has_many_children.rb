@@ -161,7 +161,7 @@ module Tengine::Support::Config::Definition::HasManyChildren
       child = child_by_name(name)
       unless child
         where = respond_to?(:__name__) ? " on " + __name__.inspect : ""
-        raise "child not found for #{name.inspect}#{where}"
+        raise "child not found for #{name.to_s.inspect}#{where}"
       end
       if child.is_a?(Tengine::Support::Config::Definition::Field)
         self.send("#{name}=", value)

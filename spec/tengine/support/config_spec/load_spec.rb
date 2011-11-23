@@ -117,23 +117,36 @@ describe "config" do
     end
 
     describe :load_file do
-      before(:all) do
-        @suite = build_suite1
-        @suite.load_file(File.expand_path('load_spec_01.yml.erb', File.dirname(__FILE__)))
+      context "normal" do
+        before(:all) do
+          @suite = build_suite1
+          @suite.load_file(File.expand_path('load_spec_01.yml.erb', File.dirname(__FILE__)))
+        end
+        subject{ @suite }
+        it_should_behave_like "load_spec_01.yml's data common"
+        it_should_behave_like "load_spec_01.yml's data with db config"
       end
-      subject{ @suite }
-      it_should_behave_like "load_spec_01.yml's data common"
-      it_should_behave_like "load_spec_01.yml's data with db config"
-    end
 
-    describe :load_file do
-      before(:all) do
-        @suite = build_suite1
-        @suite.load_file(File.expand_path('load_spec_01_with_other_settings.yml.erb', File.dirname(__FILE__)))
+      context "accept other settings" do
+        before(:all) do
+          @suite = build_suite1
+          @suite.load_file(File.expand_path('load_spec_01_with_other_settings.yml.erb', File.dirname(__FILE__)))
+        end
+        subject{ @suite }
+        it_should_behave_like "load_spec_01.yml's data common"
+        it_should_behave_like "load_spec_01.yml's data with db config"
       end
-      subject{ @suite }
-      it_should_behave_like "load_spec_01.yml's data common"
-      it_should_behave_like "load_spec_01.yml's data with db config"
+
+      describe "error for other settings" do
+        before(:all) do
+          @suite = build_suite2
+        end
+        it do
+          expect{
+            @suite.load_file(File.expand_path('load_spec_01_with_other_settings.yml.erb', File.dirname(__FILE__)))
+          }.to raise_error("child not found for \"app2_settings\"")
+        end
+      end
     end
 
     describe :load_file_by_suite3 do
