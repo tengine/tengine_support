@@ -142,9 +142,11 @@ describe "config" do
           @suite = build_suite2
         end
         it do
-          expect{
+          begin
             @suite.load_file(File.expand_path('load_spec_01_with_other_settings.yml.erb', File.dirname(__FILE__)))
-          }.to raise_error("child not found for \"app2_settings\"")
+          rescue Exception => e
+            e.message.should =~ /child not found for \"app[23]_settings\"/
+          end
         end
       end
     end
