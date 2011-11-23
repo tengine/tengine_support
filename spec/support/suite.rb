@@ -34,6 +34,7 @@ EOS
     add(:process_stderr_log, App1::LoggerConfig,
       :parameters => { :logger_name => "#{File.basename(__FILE__, '.*')}_stderr" },
       :dependencies => { :process_config => :process, :log_common => :log_common,}, &hide_about_rotation)
+    ignore(:app2_settings, :app3_settings)
     separator("\nGeneral:")
     __action__(:version, "show version"){ STDOUT.puts "1.1.1"; exit }
     __action__(:dump_skelton, "dump skelton of config"){ STDOUT.puts YAML.dump(root.to_hash); exit }
@@ -53,7 +54,7 @@ EOS
 end
 
 # build_suite1 との違いは、:dbが Tengine::Support::Config::Mongoid::Connectionではなくて、
-# 単なるhashのfieldとして定義している点です
+# 単なるhashのfieldとして定義している点と ignore(:app2_settings, :app3_settings) の定義がない点です。
 def build_suite2
   Tengine::Support::Config.suite do
     banner <<EOS

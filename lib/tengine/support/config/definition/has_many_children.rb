@@ -6,9 +6,9 @@ module Tengine::Support::Config::Definition::HasManyChildren
     @children ||= []
   end
 
-  def child_by_name(__name__)
-    __name__= __name__.to_sym if __name__.respond_to?(:to_sym)
-    children.detect{|child| child.__name__ == __name__}
+  def child_by_name(name)
+    name = name.to_sym if name.respond_to?(:to_sym)
+    children.detect{|child| child.__name__ == name}
   end
 
   def find(name_array)
@@ -21,16 +21,16 @@ module Tengine::Support::Config::Definition::HasManyChildren
     end
   end
 
-  def add(__name__, klass, options = {}, &block)
+  def add(name, klass, options = {}, &block)
     result = klass.new
     result.__parent__ = self
-    result.__name__ = __name__
+    result.__name__ = name
     result.instantiate_children
 
     dependencies = options[:dependencies] || {}
     klass.definition_reference_names.each do |res_name|
       name_array = dependencies[res_name]
-      raise "missing dependency of #{__name__.inspect} in :dependencies options to add(#{__name__.inspect}, #{klass.name}...)" unless name_array
+      raise "missing dependency of #{name.inspect} in :dependencies options to add(#{name.inspect}, #{klass.name}...)" unless name_array
       obj = root.find(Array(name_array))
       raise "#{name_array.inspect} not found" unless obj
       result.send("#{res_name}=", obj)
@@ -49,30 +49,30 @@ module Tengine::Support::Config::Definition::HasManyChildren
     end
 
     children << result
-    (class << self; self; end).class_eval{ define_method(__name__){ result } }
+    (class << self; self; end).class_eval{ define_method(name){ result } }
     result.instance_eval(&block) if block
     result
   end
 
-  def group(__name__, options = {}, &block)
-    result = Tengine::Support::Config::Definition::Group.new(__name__, options)
+  def group(name, options = {}, &block)
+    result = Tengine::Support::Config::Definition::Group.new(name, options)
     result.__parent__ = self
-    (class << self; self; end).class_eval{ define_method(__name__){ result } }
+    (class << self; self; end).class_eval{ define_method(name){ result } }
     children << result
     result.instance_eval(&block) if block
     result
   end
 
-  def field(__name__, *args, &block)
+  def field(name, *args, &block)
     attrs = args.last.is_a?(Hash) ? args.pop : {}
     attrs[:description] = args.first unless args.empty?
     attrs.update({
-        :__name__ => __name__,
+        :__name__ => name,
         :__parent__ => self,
         :__block__ => block,
         :__type__ => attrs[:__type__] || :field,
       })
-    if field = children.detect{|child| child.__name__ == __name__}
+    if field = children.detect{|child| child.__name__ == name}
       new_field = field.dup
       new_field.update(attrs)
       idx = self.children.index(field)
@@ -100,10 +100,16 @@ module Tengine::Support::Config::Definition::HasManyChildren
     end
   end
 
-  def action(__name__, *args, &block)
+  def ignore(*names)
+    @ignoreds ||= []
+    names = names.flatten.map(&:to_sym)
+    @ignoreds.concat(names)
+  end
+
+  def action(name, *args, &block)
     attrs = args.last.is_a?(Hash) ? args.pop : {}
     attrs.update({
-        :__name__ => __name__,
+        :__name__ => name,
         :__parent__ => self,
         :__block__ => block,
         :__type__ => :action,
@@ -149,11 +155,16 @@ module Tengine::Support::Config::Definition::HasManyChildren
   end
 
   def load(hash)
-    hash.each do |__name__, value|
-      child = child_by_name(__name__)
-      raise "child not found for #{__name__.inspect} on #{__name__}" unless child
+    hash.each do |name, value|
+      name = name.to_sym
+      next if @ignoreds && @ignoreds.include?(name)
+      child = child_by_name(name)
+      unless child
+        where = respond_to?(:__name__) ? " on " + __name__.inspect : ""
+        raise "child not found for #{name.inspect}#{where}"
+      end
       if child.is_a?(Tengine::Support::Config::Definition::Field)
-        self.send("#{__name__}=", value)
+        self.send("#{name}=", value)
       else
         child.load(value)
       end

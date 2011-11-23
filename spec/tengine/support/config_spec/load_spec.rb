@@ -126,6 +126,16 @@ describe "config" do
       it_should_behave_like "load_spec_01.yml's data with db config"
     end
 
+    describe :load_file do
+      before(:all) do
+        @suite = build_suite1
+        @suite.load_file(File.expand_path('load_spec_01_with_other_settings.yml.erb', File.dirname(__FILE__)))
+      end
+      subject{ @suite }
+      it_should_behave_like "load_spec_01.yml's data common"
+      it_should_behave_like "load_spec_01.yml's data with db config"
+    end
+
     describe :load_file_by_suite3 do
       before(:all) do
         @suite = build_suite3
