@@ -133,6 +133,30 @@ describe 'Tengine::Support::Config::Logger' do
       end
     end
 
+
+    describe :output do
+      subject{ Tengine::Support::Config::Logger.new.instantiate_children }
+
+      %w[STDOUT STDERR NULL].each do |value|
+        it "#{value}を設定することができる" do
+          subject.output = value
+          subject.output.should == value
+        end
+      end
+
+      it "存在するディレクトリのファイル" do
+        path = File.expand_path("unexist.log", File.dirname(__FILE__))
+        subject.output = path
+        subject.output.should == path
+      end
+
+      it "存在しないディレクトリのファイル" do
+        expect{
+          subject.output = "/unexist/dir/foo.log"
+        }.to raise_error(ArgumentError)
+      end
+    end
+
   end
 
   describe :new_logger do

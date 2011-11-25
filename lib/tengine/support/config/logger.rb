@@ -5,7 +5,16 @@ require 'active_support/hash_with_indifferent_access'
 class Tengine::Support::Config::Logger
   include Tengine::Support::Config::Definition
 
-  field :output, 'file path or "STDOUT" / "STDERR" / "NULL".', :type => :string, :default => "STDOUT"
+  field :output, 'file path or "STDOUT" / "STDERR" / "NULL".', :type => :string, :default => "STDOUT" do |value|
+    value = value.to_s
+    case value
+    when *%w[STDOUT STDERR NULL] then value
+    else
+      dirname = File.dirname(File.expand_path(value))
+      raise ArgumentError, "directory not found #{dirname} for value" unless Dir.exist?(dirname)
+      value
+    end
+  end
 
   field :rotation, 'rotation file count or daily,weekly,monthly.' do |value|
     if value.nil?
