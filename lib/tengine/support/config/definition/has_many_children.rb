@@ -88,14 +88,7 @@ module Tengine::Support::Config::Definition::HasManyChildren
           (field.default.respond_to?(:to_proc) ? self.instance_eval(&field.deault) : field.default)
       end
       define_method("#{field.__name__}=") do |value|
-        val =
-          case field.type
-          when :boolean then !!value
-          when :integer then value.nil? ? nil : value.to_i
-          when :string then value.nil? ? nil : value.to_s
-          else value
-          end
-        instance_variable_set("@#{field.__name__}", val)
+        instance_variable_set("@#{field.__name__}", field.convert(value))
       end
     end
   end

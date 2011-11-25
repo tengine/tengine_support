@@ -35,7 +35,8 @@ describe 'Tengine::Support::Config::Logger' do
       it { subject.should be_a(Tengine::Support::Config::Definition::Field)}
       its(:type){ should == :string }
       its(:__name__){ should == :level }
-      its(:description){ should == 'Logging severity threshold. debug/info/warn/error/fatal.'}
+      its(:description){ should == 'Logging severity threshold.'}
+      its(:enum){ should == %w[debug info warn error fatal]}
       its(:default){ should == "info"}
     end
 
@@ -85,6 +86,26 @@ describe 'Tengine::Support::Config::Logger' do
       its(:datetime_format){ should == nil}
       its(:formatter){ should == nil}
       its(:progname){ should == nil}
+    end
+
+
+    describe :level do
+      subject{ Tengine::Support::Config::Logger.new.instantiate_children }
+
+      %w[debug info warn error fatal].each do |name|
+        it "#{name}を設定することができる" do
+          subject.level = name
+          subject.level.should == name
+        end
+      end
+
+      %w[invalid_name DEBUG inf err].each do |name|
+        it "#{name}は設定することができない" do
+          expect{
+            subject.level = name
+          }.to raise_error(ArgumentError)
+        end
+      end
     end
   end
 

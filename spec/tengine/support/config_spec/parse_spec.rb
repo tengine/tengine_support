@@ -138,14 +138,14 @@ db:
 
 log_common:
         --log-common-output=VAL      file path or "STDOUT" / "STDERR" / "NULL".  default: "STDOUT"
-        --log-common-level=VAL       Logging severity threshold. debug/info/warn/error/fatal.  default: "info"
+        --log-common-level=VAL       Logging severity threshold.  must be one of debug,info,warn,error,fatal default: "info"
         --log-common-progname=VAL    program name to include in log messages. 
         --log-common-datetime-format=VAL
                                      A string suitable for passing to strftime. 
 
 application_log:
         --application-log-output=VAL file path or "STDOUT" / "STDERR" / "NULL". if daemon process then "./log/application.log" else "STDOUT" default: "STDOUT"
-        --application-log-level=VAL  Logging severity threshold. debug/info/warn/error/fatal. value of --log-common-level default: "info"
+        --application-log-level=VAL  Logging severity threshold. value of --log-common-level must be one of debug,info,warn,error,fatal default: "info"
         --application-log-progname=VAL
                                      program name to include in log messages. 
         --application-log-datetime-format=VAL
@@ -155,7 +155,7 @@ process_stdout_log:
         --process-stdout-log-output=VAL
                                      file path or "STDOUT" / "STDERR" / "NULL". if daemon process then "./log/suite_stdout.log" else "STDOUT" default: "STDOUT"
         --process-stdout-log-level=VAL
-                                     Logging severity threshold. debug/info/warn/error/fatal. value of --log-common-level default: "info"
+                                     Logging severity threshold. value of --log-common-level must be one of debug,info,warn,error,fatal default: "info"
         --process-stdout-log-progname=VAL
                                      program name to include in log messages. 
         --process-stdout-log-datetime-format=VAL
@@ -165,7 +165,7 @@ process_stderr_log:
         --process-stderr-log-output=VAL
                                      file path or "STDOUT" / "STDERR" / "NULL". if daemon process then "./log/suite_stderr.log" else "STDOUT" default: "STDOUT"
         --process-stderr-log-level=VAL
-                                     Logging severity threshold. debug/info/warn/error/fatal. value of --log-common-level default: "info"
+                                     Logging severity threshold. value of --log-common-level must be one of debug,info,warn,error,fatal default: "info"
         --process-stderr-log-progname=VAL
                                      program name to include in log messages. 
         --process-stderr-log-datetime-format=VAL

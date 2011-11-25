@@ -2,7 +2,7 @@ require 'tengine/support/config/definition'
 
 class Tengine::Support::Config::Definition::Field
   attr_accessor :__name__, :__parent__, :__block__, :__type__
-  attr_accessor :type, :default_description, :default, :description, :hidden
+  attr_accessor :type, :default_description, :default, :description, :hidden, :enum
   def initialize(attrs = {})
     attrs.each{|k, v| send("#{k}=", v)}
   end
@@ -51,6 +51,19 @@ class Tengine::Support::Config::Definition::Field
 
   def long_opt
     '--' << name_array.join('-').gsub(%r{_}, '-')
+  end
+
+  def convert(value)
+    result = case self.type
+    when :boolean then !!value
+    when :integer then value.nil? ? nil : value.to_i
+    when :string then value.nil? ? nil : value.to_s
+    else value
+    end
+    if self.enum && !self.enum.include?(result)
+      raise ArgumentError, "must be one of #{self.enum.inspect} but was #{result.inspect}"
+    end
+    result
   end
 
 end

@@ -8,7 +8,9 @@ class Tengine::Support::Config::Logger
   field :output, 'file path or "STDOUT" / "STDERR" / "NULL".', :type => :string, :default => "STDOUT"
   field :rotation, 'rotation file count or daily,weekly,monthly.' # , :type => :string
   field :rotation_size, 'number of max log file size.', :type => :integer
-  field :level, 'Logging severity threshold. debug/info/warn/error/fatal.', :type => :string, :default => "info"
+  field :level, 'Logging severity threshold.', :type => :string,
+    :enum => %w[debug info warn error fatal],
+    :default => "info"
 
   field :progname, 'program name to include in log messages.', :type => :string
   field :datetime_format, 'A string suitable for passing to strftime.', :type => :string
