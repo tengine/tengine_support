@@ -11,7 +11,7 @@ class Tengine::Support::Config::Logger
     when *%w[STDOUT STDERR NULL] then value
     else
       dirname = File.dirname(File.expand_path(value))
-      raise ArgumentError, "directory not found #{dirname} for value" unless Dir.exist?(dirname)
+      raise ArgumentError, "directory not found #{dirname} for value" unless File.directory?(dirname)
       value
     end
   end
