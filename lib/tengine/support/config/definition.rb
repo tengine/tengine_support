@@ -22,11 +22,12 @@ module Tengine::Support::Config::Definition
   end
 
   module ClassMethods
-    def field(__name__, *args)
+    def field(__name__, *args, &block)
       attrs = args.last.is_a?(Hash) ? args.pop : {}
       attrs[:description] = args.first unless args.empty?
       attrs[:__name__] = __name__
       attrs[:__parent__] = self
+      attrs[:convertor] = block
 
       if (superclass < Tengine::Support::Config::Definition) &&
           (self.children == self.superclass.children)

@@ -69,8 +69,8 @@ module Tengine::Support::Config::Definition::HasManyChildren
     attrs.update({
         :__name__ => name,
         :__parent__ => self,
-        :__block__ => block,
         :__type__ => attrs[:__type__] || :field,
+        :convertor => block,
       })
     if field = children.detect{|child| child.__name__ == name}
       new_field = field.dup

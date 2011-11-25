@@ -88,7 +88,6 @@ describe 'Tengine::Support::Config::Logger' do
       its(:progname){ should == nil}
     end
 
-
     describe :level do
       subject{ Tengine::Support::Config::Logger.new.instantiate_children }
 
@@ -107,6 +106,33 @@ describe 'Tengine::Support::Config::Logger' do
         end
       end
     end
+
+    describe :rotation do
+      subject{ Tengine::Support::Config::Logger.new.instantiate_children }
+
+      ["daily", "weekly", "monthly", :daily, 2, 8].each do |value|
+        it "#{value}を設定することができる(変換なし)" do
+          subject.rotation = value
+          subject.rotation.should == value
+        end
+      end
+
+      ["1", "100"].each do |value|
+        it "#{value}を設定することができる(変換あり)" do
+          subject.rotation = value
+          subject.rotation.should == value.to_i
+        end
+      end
+
+      ['invalid_rotation', true, false].each do |value|
+        it "#{value}は設定することができない" do
+          expect{
+            subject.rotation = value
+          }.to raise_error(ArgumentError)
+        end
+      end
+    end
+
   end
 
   describe :new_logger do
