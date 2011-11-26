@@ -91,6 +91,11 @@ describe 'Tengine::Support::Config::Logger' do
     describe :level do
       subject{ Tengine::Support::Config::Logger.new.instantiate_children }
 
+      it "nilが明示的に指定されてもデフォルト値になる" do
+        subject.level = nil
+        subject.level.should == 'info'
+      end
+
       %w[debug info warn error fatal].each do |name|
         it "#{name}を設定することができる" do
           subject.level = name

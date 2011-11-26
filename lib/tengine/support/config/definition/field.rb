@@ -65,6 +65,7 @@ class Tengine::Support::Config::Definition::Field
     when :string then value.nil? ? nil : value.to_s
     else value
     end
+    result ||= default_value
     if self.enum && !self.enum.include?(result)
       raise ArgumentError, "must be one of #{self.enum.inspect} but was #{result.inspect}"
     end
