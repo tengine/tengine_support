@@ -28,8 +28,8 @@ class Tengine::Support::Config::Definition::Field
     ].join(' ')
   end
 
-  def default_value
-    default.respond_to?(:to_proc) ? __parent__.instance_eval(&default) : default
+  def default_value(context = __parent__)
+    default.respond_to?(:to_proc) ? context.instance_eval(&default) : default
   end
 
   def to_hash
@@ -57,7 +57,7 @@ class Tengine::Support::Config::Definition::Field
     '--' << name_array.join('-').gsub(%r{_}, '-')
   end
 
-  def convert(value)
+  def convert(value, context = self)
     return convertor.call(value) if convertor
     result = case self.type
     when :boolean then !!value
@@ -65,7 +65,7 @@ class Tengine::Support::Config::Definition::Field
     when :string then value.nil? ? nil : value.to_s
     else value
     end
-    result ||= default_value
+    result ||= default_value(context)
     if self.enum && !self.enum.include?(result)
       raise ArgumentError, "must be one of #{self.enum.inspect} but was #{result.inspect}"
     end

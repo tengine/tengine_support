@@ -197,4 +197,20 @@ describe "config" do
     end
   end
 
+  describe ConfigSuite3 do
+    context "instance" do
+      subject{ ConfigSuite3.new }
+
+      it "ログの出力先のデフォルト値" do
+        subject.application_log.output.should == "STDOUT"
+      end
+
+      it "明示的にnilを設定してもデフォルト値が得られる" do
+        subject.application_log.output = nil
+        subject.application_log.output.should == "STDOUT"
+      end
+
+    end
+  end
+
 end

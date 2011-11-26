@@ -62,7 +62,7 @@ module Tengine::Support::Config::Definition
         end
 
         define_method("#{field.__name__}=") do |value|
-          instance_variable_set("@#{field.__name__}", field.convert(value))
+          instance_variable_set("@#{field.__name__}", field.convert(value, self))
         end
       end
     end
