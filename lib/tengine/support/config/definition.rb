@@ -22,11 +22,12 @@ module Tengine::Support::Config::Definition
   end
 
   module ClassMethods
-    def field(__name__, *args)
+    def field(__name__, *args, &block)
       attrs = args.last.is_a?(Hash) ? args.pop : {}
       attrs[:description] = args.first unless args.empty?
       attrs[:__name__] = __name__
       attrs[:__parent__] = self
+      attrs[:convertor] = block
 
       if (superclass < Tengine::Support::Config::Definition) &&
           (self.children == self.superclass.children)
@@ -61,14 +62,7 @@ module Tengine::Support::Config::Definition
         end
 
         define_method("#{field.__name__}=") do |value|
-          val =
-            case field.type
-            when :boolean then !!value
-            when :integer then value.nil? ? nil : value.to_i
-            when :string then value.nil? ? nil : value.to_s
-            else value
-            end
-          instance_variable_set("@#{field.__name__}", val)
+          instance_variable_set("@#{field.__name__}", field.convert(value, self))
         end
       end
     end

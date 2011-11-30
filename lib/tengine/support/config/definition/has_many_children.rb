@@ -69,8 +69,8 @@ module Tengine::Support::Config::Definition::HasManyChildren
     attrs.update({
         :__name__ => name,
         :__parent__ => self,
-        :__block__ => block,
         :__type__ => attrs[:__type__] || :field,
+        :convertor => block,
       })
     if field = children.detect{|child| child.__name__ == name}
       new_field = field.dup
@@ -88,14 +88,7 @@ module Tengine::Support::Config::Definition::HasManyChildren
           (field.default.respond_to?(:to_proc) ? self.instance_eval(&field.deault) : field.default)
       end
       define_method("#{field.__name__}=") do |value|
-        val =
-          case field.type
-          when :boolean then !!value
-          when :integer then value.nil? ? nil : value.to_i
-          when :string then value.nil? ? nil : value.to_s
-          else value
-          end
-        instance_variable_set("@#{field.__name__}", val)
+        instance_variable_set("@#{field.__name__}", field.convert(value, self))
       end
     end
   end

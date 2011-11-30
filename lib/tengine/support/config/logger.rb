@@ -5,12 +5,38 @@ require 'active_support/hash_with_indifferent_access'
 class Tengine::Support::Config::Logger
   include Tengine::Support::Config::Definition
 
-  field :output, 'file path or "STDOUT" / "STDERR" / "NULL".', :type => :string, :default => "STDOUT"
-  field :rotation, 'rotation file count or daily,weekly,monthly.' # , :type => :string
+  field :output, 'file path or "STDOUT" / "STDERR" / "NULL".', :type => :string, :default => "STDOUT" do |value|
+    value = value.to_s
+    case value
+    when *%w[STDOUT STDERR NULL] then value
+    else
+      dirname = File.dirname(File.expand_path(value))
+      raise ArgumentError, "directory not found #{dirname} for value" unless File.directory?(dirname)
+      value
+    end
+  end
+
+  field :rotation, 'rotation file count or daily,weekly,monthly.' do |value|
+    if value.nil?
+      nil
+    elsif value.is_a?(Integer)
+      value
+    else
+      case value.to_s
+      when *%w[daily weekly monthly] then value
+      when /\A\d+\Z/ then value.to_i
+      else raise ArgumentError, "must be nil or an Integer or one of daily,weekly,monthly"
+      end
+    end
+  end
+
   field :rotation_size, 'number of max log file size.', :type => :integer
-  field :level, 'Logging severity threshold. debug/info/warn/error/fatal.', :type => :string, :default => "info"
+
+  field :level, 'Logging severity threshold.', :type => :string,
+    :enum => %w[debug info warn error fatal], :default => "info"
 
   field :progname, 'program name to include in log messages.', :type => :string
+
   field :datetime_format, 'A string suitable for passing to strftime.', :type => :string
 
   # formatterにはprocしか設定できないので特別設定ファイルやコマンドラインオプションで指定することはできません。

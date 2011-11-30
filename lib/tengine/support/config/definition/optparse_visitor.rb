@@ -53,6 +53,9 @@ class Tengine::Support::Config::Definition::OptparseVisitor
           o.on(*args){|f| d.__parent__.send("#{d.__name__}=", f) }
         else
           long_opt << "=VAL"
+          if d.enum
+            desc_str << " must be one of " << (d.enum.join(',').gsub(/\A\[|\]\Z/, ''))
+          end
           if default_value = d.default_value
             desc_str << " default: #{default_value.inspect}"
           end

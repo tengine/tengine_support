@@ -35,7 +35,8 @@ describe 'Tengine::Support::Config::Logger' do
       it { subject.should be_a(Tengine::Support::Config::Definition::Field)}
       its(:type){ should == :string }
       its(:__name__){ should == :level }
-      its(:description){ should == 'Logging severity threshold. debug/info/warn/error/fatal.'}
+      its(:description){ should == 'Logging severity threshold.'}
+      its(:enum){ should == %w[debug info warn error fatal]}
       its(:default){ should == "info"}
     end
 
@@ -86,6 +87,81 @@ describe 'Tengine::Support::Config::Logger' do
       its(:formatter){ should == nil}
       its(:progname){ should == nil}
     end
+
+    describe :level do
+      subject{ Tengine::Support::Config::Logger.new.instantiate_children }
+
+      it "nilが明示的に指定されてもデフォルト値になる" do
+        subject.level = nil
+        subject.level.should == 'info'
+      end
+
+      %w[debug info warn error fatal].each do |name|
+        it "#{name}を設定することができる" do
+          subject.level = name
+          subject.level.should == name
+        end
+      end
+
+      %w[invalid_name DEBUG inf err].each do |name|
+        it "#{name}は設定することができない" do
+          expect{
+            subject.level = name
+          }.to raise_error(ArgumentError)
+        end
+      end
+    end
+
+    describe :rotation do
+      subject{ Tengine::Support::Config::Logger.new.instantiate_children }
+
+      ["daily", "weekly", "monthly", :daily, 2, 8].each do |value|
+        it "#{value}を設定することができる(変換なし)" do
+          subject.rotation = value
+          subject.rotation.should == value
+        end
+      end
+
+      ["1", "100"].each do |value|
+        it "#{value}を設定することができる(変換あり)" do
+          subject.rotation = value
+          subject.rotation.should == value.to_i
+        end
+      end
+
+      ['invalid_rotation', true, false].each do |value|
+        it "#{value}は設定することができない" do
+          expect{
+            subject.rotation = value
+          }.to raise_error(ArgumentError)
+        end
+      end
+    end
+
+
+    describe :output do
+      subject{ Tengine::Support::Config::Logger.new.instantiate_children }
+
+      %w[STDOUT STDERR NULL].each do |value|
+        it "#{value}を設定することができる" do
+          subject.output = value
+          subject.output.should == value
+        end
+      end
+
+      it "存在するディレクトリのファイル" do
+        path = File.expand_path("unexist.log", File.dirname(__FILE__))
+        subject.output = path
+        subject.output.should == path
+      end
+
+      it "存在しないディレクトリのファイル" do
+        expect{
+          subject.output = "/unexist/dir/foo.log"
+        }.to raise_error(ArgumentError)
+      end
+    end
+
   end
 
   describe :new_logger do
