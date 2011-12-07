@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 require 'tengine/support/core_ext/hash/deep_dup'
+require 'active_support/core_ext/hash/keys'
 
 class Hash
 
