@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "tengine_support"
-  s.version = "0.3.23"
+  s.version = "0.3.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["saishu", "w-irie", "taigou", "totty", "hiroshinakao", "g-morita", "guemon", "aoetk", "hattori-at-nt", "t-yamada", "y-karashima", "akm"]
-  s.date = "2011-12-14"
+  s.date = "2011-12-15"
   s.description = "tengine_support provides utility classes/modules which is not included in active_support. It doesn't depend on other tengine gems."
   s.email = "tengine@nautilus-technologies.com"
   s.extra_rdoc_files = [
@@ -26,6 +26,11 @@ Gem::Specification.new do |s|
     "lib/tengine/support/yaml_with_erb.rb",
     "lib/tengine_support.rb",
     "spec/spec_helper.rb",
+    "spec/tengine_support/yaml_with_erb_spec.rb",
+    "spec/tengine_support/yaml_with_erb_spec/test1.yml.erb",
+    "spec/tengine_support/yaml_with_erb_spec/test2_with_erb.yml",
+    "spec/tengine_support/yaml_with_erb_spec/test3_without_erb.yml",
+    "spec/tengine_support/yaml_with_erb_spec/test4_with_invalid_erb.yml",
     "tengine_support.gemspec"
   ]
   s.homepage = "http://github.com/tengine/tengine_support"
@@ -38,7 +43,6 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<activesupport>, [">= 3.0.0"])
       s.add_development_dependency(%q<rspec>, ["~> 2.6.0"])
       s.add_development_dependency(%q<yard>, ["~> 0.7.2"])
       s.add_development_dependency(%q<bundler>, ["~> 1.0.18"])
@@ -47,7 +51,6 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<autotest>, [">= 0"])
       s.add_development_dependency(%q<rdiscount>, [">= 0"])
     else
-      s.add_dependency(%q<activesupport>, [">= 3.0.0"])
       s.add_dependency(%q<rspec>, ["~> 2.6.0"])
       s.add_dependency(%q<yard>, ["~> 0.7.2"])
       s.add_dependency(%q<bundler>, ["~> 1.0.18"])
@@ -57,7 +60,6 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<rdiscount>, [">= 0"])
     end
   else
-    s.add_dependency(%q<activesupport>, [">= 3.0.0"])
     s.add_dependency(%q<rspec>, ["~> 2.6.0"])
     s.add_dependency(%q<yard>, ["~> 0.7.2"])
     s.add_dependency(%q<bundler>, ["~> 1.0.18"])
