@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "tengine_support"
-  s.version = "0.3.22"
+  s.version = "0.3.24"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["saishu", "w-irie", "taigou", "totty", "hiroshinakao", "g-morita", "guemon", "aoetk", "hattori-at-nt", "t-yamada", "y-karashima", "akm"]
-  s.date = "2011-11-26"
+  s.date = "2011-12-15"
   s.description = "tengine_support provides utility classes/modules which is not included in active_support. It doesn't depend on other tengine gems."
   s.email = "tengine@nautilus-technologies.com"
   s.extra_rdoc_files = [
@@ -40,9 +40,15 @@ Gem::Specification.new do |s|
     "lib/tengine/support/core_ext.rb",
     "lib/tengine/support/core_ext/array.rb",
     "lib/tengine/support/core_ext/array/deep_dup.rb",
+    "lib/tengine/support/core_ext/enumerable.rb",
+    "lib/tengine/support/core_ext/enumerable/deep_freeze.rb",
+    "lib/tengine/support/core_ext/enumerable/each_next_tick.rb",
     "lib/tengine/support/core_ext/hash.rb",
+    "lib/tengine/support/core_ext/hash/compact.rb",
     "lib/tengine/support/core_ext/hash/deep_dup.rb",
     "lib/tengine/support/core_ext/hash/keys.rb",
+    "lib/tengine/support/core_ext/module.rb",
+    "lib/tengine/support/core_ext/module/private_constant.rb",
     "lib/tengine/support/null_logger.rb",
     "lib/tengine/support/yaml_with_erb.rb",
     "lib/tengine_support.rb",
@@ -61,6 +67,9 @@ Gem::Specification.new do |s|
     "spec/tengine/support/config_spec/load_spec_02.yml.erb",
     "spec/tengine/support/config_spec/parse_spec.rb",
     "spec/tengine/support/core_ext/array/deep_dup_spec.rb",
+    "spec/tengine/support/core_ext/enumerable/deep_freeze_spec.rb",
+    "spec/tengine/support/core_ext/enumerable/each_next_tick_spec.rb",
+    "spec/tengine/support/core_ext/hash/compact_spec.rb",
     "spec/tengine/support/core_ext/hash/deep_dup_spec.rb",
     "spec/tengine/support/core_ext/hash/keys_spec.rb",
     "spec/tengine/support/null_logger_spec.rb",
