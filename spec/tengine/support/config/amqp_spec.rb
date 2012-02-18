@@ -19,6 +19,14 @@ describe 'Tengine::Support::Config::Amqp' do
       its(:description){ should == 'port to connect queue.'}
       its(:default){ should == 5672}
     end
+
+    describe Tengine::Support::Config::Amqp::Connection.heartbeat_interval do
+      it { subject.should be_a(Tengine::Support::Config::Definition::Field)}
+      its(:type){ should == :integer }
+      its(:__name__){ should == :heartbeat_interval }
+      its(:description){ should == 'heartbeat interval client uses, in seconds.'}
+      its(:default){ should == 0}
+    end
   end
 
 end

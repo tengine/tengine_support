@@ -75,6 +75,7 @@ describe "config" do
           :vhost=>nil,
           :user=>nil,
           :pass=>nil,
+          :heartbeat_interval=>0
         }
       end
     end

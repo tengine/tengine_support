@@ -83,6 +83,7 @@ describe "config" do
               :vhost => nil,
               :user  => nil,
               :pass  => nil,
+              :heartbeat_interval => 0,
             },
             :exchange => {
               :name => 'tengine_event_exchange',

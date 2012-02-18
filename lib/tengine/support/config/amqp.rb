@@ -8,6 +8,7 @@ module Tengine::Support::Config::Amqp
     field :vhost, "vhost to connect queue.", :type => :string
     field :user , "username to connect queue.", :type => :string
     field :pass , "password to connect queue.", :type => :string
+    field :heartbeat_interval , "heartbeat interval client uses, in seconds.", :default => 0, :type => :integer
   end
 
   class Exchange
