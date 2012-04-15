@@ -19,7 +19,7 @@ Jeweler::Tasks.new do |gem|
   gem.license = "MPL/LGPL"
   gem.summary = "tengine_support provides utility classes/modules which isn't included in active_support."
   gem.description = "tengine_support provides utility classes/modules which is not included in active_support. It doesn't depend on other tengine gems."
-  gem.email = "tengine@nautilus-technologies.com"
+  gem.email = "tengine-info@groovenauts.jp"
   gem.authors = %w[shyouhei akm]
   # dependencies defined in Gemfile
 end

@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.authors = ["shyouhei", "akm", "taigou"]
   s.date = "2012-02-16"
   s.description = "tengine_support provides utility classes/modules which is not included in active_support. It doesn't depend on other tengine gems."
-  s.email = "tengine@nautilus-technologies.com"
+  s.email = "tengine-info@groovenauts.jp"
   s.extra_rdoc_files = [
     "README.md"
   ]

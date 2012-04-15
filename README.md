@@ -18,4 +18,4 @@ tengine_support is distributed under the LGPL and MPL
 
 ## Copyright
 
-Copyright (c) 2011 nautilus-technologies.com
+Copyright (c) 2012 Groovenauts, Inc.
