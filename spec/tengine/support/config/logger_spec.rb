@@ -172,7 +172,7 @@ describe 'Tengine::Support::Config::Logger' do
 
       require 'active_support/version'
       if ActiveSupport::VERSION::STRING =~ /^3\.0\./
-        its(:formatter){ should be_a?(Logger::SimpleFormatter)}
+        its(:formatter){ should be_a(Logger::SimpleFormatter)}
       else
         its(:formatter){ should == nil}
       end
