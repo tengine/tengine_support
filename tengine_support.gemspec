@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "tengine_support"
-  s.version = "0.3.26"
+  s.version = "0.3.27"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["shyouhei", "akm", "taigou"]
-  s.date = "2012-02-16"
+  s.date = "2012-05-01"
   s.description = "tengine_support provides utility classes/modules which is not included in active_support. It doesn't depend on other tengine gems."
   s.email = "tengine-info@groovenauts.jp"
   s.extra_rdoc_files = [
@@ -49,6 +49,7 @@ Gem::Specification.new do |s|
     "lib/tengine/support/core_ext/hash/keys.rb",
     "lib/tengine/support/core_ext/module.rb",
     "lib/tengine/support/core_ext/module/private_constant.rb",
+    "lib/tengine/support/mongoid.rb",
     "lib/tengine/support/null_logger.rb",
     "lib/tengine/support/yaml_with_erb.rb",
     "lib/tengine_support.rb",
@@ -83,7 +84,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/tengine/tengine_support"
   s.licenses = ["MPL/LGPL"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.16"
+  s.rubygems_version = "1.8.12"
   s.summary = "tengine_support provides utility classes/modules which isn't included in active_support."
 
   if s.respond_to? :specification_version then
