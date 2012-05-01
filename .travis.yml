@@ -8,3 +8,4 @@ rvm:
 gemfile:
   - gemfiles/Gemfile.activesupport-3.0.10
   - gemfiles/Gemfile.activesupport-3.1.1
+  - gemfiles/Gemfile.activesupport-3.2.3
