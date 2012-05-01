@@ -169,7 +169,14 @@ describe 'Tengine::Support::Config::Logger' do
     context "デフォルトの場合" do
       subject{ Tengine::Support::Config::Logger.new.instantiate_children.new_logger }
       its(:datetime_format){ should == nil}
-      its(:formatter){ should == nil}
+
+      require 'active_support/version'
+      if ActiveSupport::VERSION::STRING =~ /^3\.0\./
+        its(:formatter){ should be_a?(Logger::SimpleFormatter)}
+      else
+        its(:formatter){ should == nil}
+      end
+
       its(:level){ should == 1}
       its(:progname){ should == nil}
     end
