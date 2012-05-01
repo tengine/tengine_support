@@ -56,10 +56,11 @@ class Tengine::Support::Config::Logger
     end
     rotation = options[:rotation]
     shift_age = (rotation =~ /\A\d+\Z/) ? rotation.to_i : rotation
-    result = ::Logger.new(dev, shift_age, options[:rotation_size])
-    result.level = ::Logger.const_get(options[:level].to_s.upcase)
     dtf = options[:datetime_format]
+    result = ::Logger.new(dev, shift_age, options[:rotation_size])
+    result.formatter = (options[:formatter] || dtf) ? Logger::Formatter.new : nil
     result.datetime_format = dtf if dtf
+    result.level = ::Logger.const_get(options[:level].to_s.upcase)
     progname = options[:progname]
     result.progname = progname if progname
     result

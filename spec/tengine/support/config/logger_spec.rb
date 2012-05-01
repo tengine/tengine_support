@@ -3,6 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../../../spec_helper')
 
 require 'logger'
 require 'tempfile'
+require 'active_support/core_ext/logger'
 
 describe 'Tengine::Support::Config::Logger' do
 
@@ -199,7 +200,7 @@ describe 'Tengine::Support::Config::Logger' do
         }.instantiate_children.new_logger
       end
       its(:datetime_format){ should == "%Y/%m/%d %H:%M:%S"}
-      its(:formatter){ should == nil}
+      its(:formatter){ should be_a(Logger::Formatter)}
       its(:level){ should == 1}
       its(:progname){ should == "foobar"}
       it "実際に出力してみる" do
