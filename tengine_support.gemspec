@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["shyouhei", "akm", "taigou"]
-  s.date = "2012-05-01"
+  s.date = "2012-05-02"
   s.description = "tengine_support provides utility classes/modules which is not included in active_support. It doesn't depend on other tengine gems."
   s.email = "tengine-info@groovenauts.jp"
   s.extra_rdoc_files = [
@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
     "VERSION",
     "gemfiles/Gemfile.activesupport-3.0.10",
     "gemfiles/Gemfile.activesupport-3.1.1",
+    "gemfiles/Gemfile.activesupport-3.2.3",
     "lib/tengine/support.rb",
     "lib/tengine/support/config.rb",
     "lib/tengine/support/config/amqp.rb",
@@ -73,6 +74,7 @@ Gem::Specification.new do |s|
     "spec/tengine/support/core_ext/hash/compact_spec.rb",
     "spec/tengine/support/core_ext/hash/deep_dup_spec.rb",
     "spec/tengine/support/core_ext/hash/keys_spec.rb",
+    "spec/tengine/support/mongoid_spec.rb",
     "spec/tengine/support/null_logger_spec.rb",
     "spec/tengine/support/yaml_with_erb_spec.rb",
     "spec/tengine/support/yaml_with_erb_spec/test1.yml.erb",
@@ -94,7 +96,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<activesupport>, [">= 3.0.0"])
       s.add_development_dependency(%q<rspec>, ["~> 2.6.0"])
       s.add_development_dependency(%q<yard>, ["~> 0.7.2"])
-      s.add_development_dependency(%q<bundler>, ["~> 1.0.18"])
+      s.add_development_dependency(%q<bundler>, ["~> 1.1.3"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.6.4"])
       s.add_development_dependency(%q<simplecov>, ["~> 0.5.3"])
       s.add_development_dependency(%q<autotest>, [">= 0"])
@@ -103,7 +105,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<activesupport>, [">= 3.0.0"])
       s.add_dependency(%q<rspec>, ["~> 2.6.0"])
       s.add_dependency(%q<yard>, ["~> 0.7.2"])
-      s.add_dependency(%q<bundler>, ["~> 1.0.18"])
+      s.add_dependency(%q<bundler>, ["~> 1.1.3"])
       s.add_dependency(%q<jeweler>, ["~> 1.6.4"])
       s.add_dependency(%q<simplecov>, ["~> 0.5.3"])
       s.add_dependency(%q<autotest>, [">= 0"])
@@ -113,7 +115,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<activesupport>, [">= 3.0.0"])
     s.add_dependency(%q<rspec>, ["~> 2.6.0"])
     s.add_dependency(%q<yard>, ["~> 0.7.2"])
-    s.add_dependency(%q<bundler>, ["~> 1.0.18"])
+    s.add_dependency(%q<bundler>, ["~> 1.1.3"])
     s.add_dependency(%q<jeweler>, ["~> 1.6.4"])
     s.add_dependency(%q<simplecov>, ["~> 0.5.3"])
     s.add_dependency(%q<autotest>, [">= 0"])
