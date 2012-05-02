@@ -6,6 +6,7 @@ source "http://rubygems.org"
 gem "activesupport", ">= 3.0.0"
 group :test do
   gem "eventmachine", "~> 0.12.0"
+  gem "bson_ext", "~> 1.3"
   gem "mongoid", "~> 2.3.3"
 end
 
